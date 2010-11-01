@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# pws
+#  see http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby for more information
+
 require 'rubygems' if RUBY_VERSION[2] == ?8
 
 require 'openssl'
@@ -10,7 +13,7 @@ require 'zucker/kernel'
 require 'zucker/version'
 
 class PasswordSafe
-  VERSION = "0.1.0".freeze
+  VERSION = "0.1.1".freeze
 
   Entry = Struct.new :description, :password
 
@@ -198,6 +201,7 @@ end
 if standalone? # using zucker/kernel (instead of __FILE__ == $0)
   if $*.empty?
     action = :show
+    args   = []
   else
     action = $*.shift[/^-{0,2}(.*)$/, 1].to_sym # also accept first argument, if it is prefixed with - or --
     args   = [*$*]
