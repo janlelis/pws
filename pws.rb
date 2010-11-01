@@ -1,29 +1,89 @@
+require 'rubygems' if RUBY_VERSION[2] == ?8
+
 require 'openssl'
 require 'fileutils'
+require 'clipboard'         # gem install clipboard
+require 'zucker/alias_for'  # gem install zucker
+require 'zucker/egonil'
+require 'zucker/kernel'
 
 class PasswordSafe
-  VERSION = '0.0.2'.freeze
+  VERSION = "0.0.3".freeze
+
+  Entry = Struct.new :description, :password
 
   def initialize( filename = File.expand_path('~/.pws') )
     @pwfile = filename
-    @pwdata = "example data"
-    @pwhash = Encryptor.hash 'password'
 
     access_safe
     read_safe
   end
+
+  def add(key, description = nil, password = nil)
+    @pwdata[key]             = Entry.new
+    @pwdata[key].password    = password || ask_for_password( "please enter a password for #{key}" )
+    @pwdata[key].description = description
+    write_safe
+  end
+  aliases_for :add, :a, :set, :create, :update, :[]= # using zucker/alias_for
+
+  def get(key)
+    if pw_plaintext = @pwdata[key] && @pwdata[key].password
+      Clipboard.copy pw_plaintext
+      puts "The password has been copied to your clipboard"
+    else
+      puts "No password entry found for #{key}"
+    end
+  end
+  aliases_for :get, :g, :entry, :[]
+
+  def remove(key)
+    if @pwdata.delete key
+      puts "#{key} has been removed"
+    else
+      puts "Nothing removed"
+    end
+  end
+  aliases_for :remove, :r, :delete
+
+  def show
+    puts "Available passwords \n" +
+
+    if @pwdata.empty? 
+      '  (none)'
+    else
+      @pwdata.map{ |key, pwentry|
+        "  #{key}" + if pwentry.description then ": #{pwentry.description}" else '' end
+      }*"\n" 
+    end
+  end
+  aliases_for :show, :s, :list
+
+  def description(*keys)
+    keys.each{ |key|
+      puts (@pwdata[key] && @pwdata[key].description) || key
+    }
+  end
+
+  def master
+    @pwhash = Encryptor.hash ask_for_password 'please enter a new master password'
+    write_safe
+  end
+  aliases_for :master, :m
 
   private
 
   # Tries to load and decrypt the password safe from the pwfile
   def read_safe
     pwdata_encrypted = File.read @pwfile
-    @pwdata          = Encryptor.decrypt pwdata_encrypted, @pwhash
+    pwdata_dump      = Encryptor.decrypt( pwdata_encrypted, @pwhash )
+    @pwdata          = Marshal.load(pwdata_dump) || {}
   end
 
   # Tries to encrypt and save the password safe into the pwfile
   def write_safe
-    pwdata_encrypted = Encryptor.encrypt @pwdata, @pwhash
+    pwdata_dump      = Marshal.dump @pwdata || {}
+    pwdata_encrypted = Encryptor.encrypt pwdata_dump, @pwhash
     File.open( @pwfile, 'w' ){ |f| f.write pwdata_encrypted }
   end
   
@@ -32,8 +92,21 @@ class PasswordSafe
     if !File.file? @pwfile
       puts "No password safe detected, creating one at #@pwfile"
       FileUtils.touch @pwfile
+      @pwhash = Encryptor.hash ask_for_password 'please enter a new master password'
       write_safe
+    else
+      @pwhash = Encryptor.hash ask_for_password 'master password'
     end
+  end
+
+  def ask_for_password(prompt = 'new password')
+    print "#{prompt}: ".capitalize
+    system 'stty -echo'                    # no more terminal output
+    pw_plaintext = ($stdin.gets||'').chop  # gets without $stdin would mistakenly read_safe from ARGV
+    system 'stty echo'                     # restore terminal output
+    puts
+
+    pw_plaintext
   end
 
   class << Encryptor = Module.new
@@ -64,18 +137,7 @@ class PasswordSafe
   end
 end
 
-if __FILE__ == $0 # test whether it works :)
-  pws = PasswordSafe.new 'p2test'
-  print 'Enter data to encrypt: '
-  pws.instance_variable_set :@pwdata, gets.chop
-  pws.send :write_safe
-
-  puts "In safe: " +
-    (File.read pws.instance_variable_get :@pwfile).inspect
-
-  pws = PasswordSafe.new 'p2test'
-  pws.send :read_safe
-  puts "Read from safe: " + pws.instance_variable_get(:@pwdata)
+if standalone? # using zucker/kernel (instead of __FILE__ == $0)
+  pws = PasswordSafe.new 'p3test'
+  pws.send $*.shift.to_sym, *$*
 end
-
-# J-_-L
