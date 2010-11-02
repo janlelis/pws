@@ -13,7 +13,7 @@ require 'zucker/kernel'
 require 'zucker/version'
 
 class PasswordSafe
-  VERSION = "0.1.2".freeze
+  VERSION = "0.1.3".freeze
 
   Entry = Struct.new :description, :password
 
