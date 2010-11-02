@@ -13,7 +13,7 @@ require 'zucker/kernel'
 require 'zucker/version'
 
 class PasswordSafe
-  VERSION = "0.1.1".freeze
+  VERSION = "0.1.2".freeze
 
   Entry = Struct.new :description, :password
 
@@ -105,8 +105,9 @@ class PasswordSafe
 
   # Adds a password entry with a fresh generated random password
   def generate( key, description = nil, length = 128, chars = (32..126).map(&:chr) )
-    add key, (1..length).map{ chars.sample }.join
+    add key, nil, (1..length).map{ chars[rand chars.size] }.join # possible in 1.9: chars.sample
   end
+  alias_for :generate, :gen
 
   # Prevents accidental displaying, e.g. in irb
   def to_s
