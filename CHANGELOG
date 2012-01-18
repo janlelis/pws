@@ -1,0 +1,16 @@
+== 0.9.0
+* It's working, again! (Sorry for the broken gem version that long time...)
+* Cucumber spec suite :D [based on the one by thecatwasnot]
+* Ruby 1.9 only
+* Colorized output using the paint gem
+* Fix an encoding issue
+* New redundancy data mechanism (old file format not compatible anymore)
+* Uses PWS environment variable to determine the password file location (default is still: ~/.pws)
+* Different generate method interface
+* Remove descriptions (keep it simple)
+* Uses SecureRandom instead of rand
+* Fix removing passwords
+* Lots of little fixes and tweaks
+* New default clipboard time: 5 seconds. Another feature: Old clipboard content gets restored after that time
+
+== See gist https://gist.github.com/658494 for older changes

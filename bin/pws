@@ -1,0 +1,70 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/pws'
+
+if $*.empty?
+  action = :show
+  args   = []
+else
+  action = $*.shift[/^-{0,2}(.*)$/, 1].to_sym # also accept first argument, if it is prefixed with - or --
+  args   = [*$*]
+end
+
+begin
+  case action
+  when :h, :help, :commands
+    puts
+    print "  "
+    pa "Available commands", :underline
+    puts \
+<<HELP
+  
+  #{Paint['s', :bold]} / show / list
+  Lists all available password entries
+  
+  #{Paint['g', :bold]} / get / entry ( name, seconds = 5 )
+  Copies the password for <name> to the clipboard. If second argument is 0,
+  the password will stay in the clipboard.
+  
+  #{Paint['a', :bold]} / add / set / store / create ( name, password = nil )
+  Stores a new password entry. The second argument can be a password, but
+  it's recommended not omit it and enter it interactively.
+  
+  #{Paint['gen', :bold]} / generate ( name, seconds = 5, length = 64, chars )
+  Generates a new password for <name> and copies it to the clipboard.
+  The second argument is the time that get passed to get.
+  The third argument sets a password length.
+  The fourth argument allows you to pass a char pool that is used for generating
+  the passwords.
+  
+  #{Paint['r', :bold]} / remove / delete ( name )
+  Removes a password entry
+  
+  #{Paint['m', :bold]} / master
+  Changes the master password
+  
+  #{Paint['v', :bold]} / version
+  Displays version and website
+  
+  #{Paint['h', :bold]} / help / commands
+  Displays this help
+  
+HELP
+  when :v, :version
+    puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
+  else # redirect to safe
+    if PWS.public_instance_methods(false).include?(action)
+      pws = PWS.new
+      pws.send action, *args
+    else
+      pa "Unknown pws command: '#{action}'. Please see 'pws help' for a list of available commands!", :red
+    end
+  end
+rescue PWS::NoAccess
+  pa $!.message.capitalize, :red, :bold
+rescue ArgumentError
+  pa $!.message.capitalize, :red
+rescue Interrupt
+  system 'stty echo' if $stdin.tty? # ensure terminal's working
+  pa "...canceled", :red
+end
