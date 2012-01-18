@@ -19,7 +19,7 @@ begin
     puts \
 <<HELP
   
-  #{Paint['s', :bold]} / show / list
+  #{Paint['s', :bold]} / show / list / status
   Lists all available password entries.
   
   #{Paint['g', :bold]} / get / entry / copy ( name, seconds = 5 )
@@ -53,8 +53,7 @@ HELP
     puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
   else # redirect to safe
     if PWS.public_instance_methods(false).include?(action)
-      pws = PWS.new
-      pws.send action, *args
+      PWS.new.send action, *args
     else
       pa "Unknown command: #{action}\nPlease see `pws help` for a list of available commands!", :red
     end

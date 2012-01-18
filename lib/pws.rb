@@ -101,11 +101,11 @@ class PWS
       pa %[No passwords stored at #{@pw_file}, yet.], :red
     else
       puts Paint["Entries", :underline] + %[ in ] + @pw_file
-      puts @pw_data.keys.map{ |key| %[- #{key}\n] }.join
+      puts @pw_data.keys.sort.map{ |key| %[- #{key}\n] }.join
     end
     return true
   end
-  aliases_for :show, :s, :list
+  aliases_for :show, :s, :list, :status
 
   # Changes the master password
   def master(password = nil)
