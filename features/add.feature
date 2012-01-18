@@ -9,7 +9,7 @@ Feature: Add
     And  I type "my_master_password"
     And  I type "github_password"
     Then the output should contain "Master password:"
-    And  the output should contain "Please enter a new password for github:"
+    And  the output should contain "Please enter a password for github:"
     And  the output should contain "The password for github has been added."
     
   Scenario: Add a new password for "github", already passing it as command line paramenter (not recommended)
@@ -32,7 +32,7 @@ Feature: Add
     And  I type "my_master_password"
     And  I type ""
     Then the output should contain "Master password:"
-    And  the output should contain "Please enter a new password for github:"
+    And  the output should contain "Please enter a password for github:"
     And  the output should contain "Cannot add an empty password!"
     
   Scenario: Try to add a new password for "github" (but the master password is wrong)
@@ -40,4 +40,6 @@ Feature: Add
     When I run `pws add github` interactively
     And  I type "my_master_password_wrong"
     Then the output should contain "Master password:"
-    And  the output should contain "Could not decrypt/load the password safe!"
+    And  the output should contain "NO ACCESS"
+    
+  

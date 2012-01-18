@@ -61,3 +61,5 @@ Feature: Generate
     And  the output should contain "The password for github has been added."
     And  the output should contain "The password for github has been copied to your clipboard."
     And  the clipboard should match ^[!\"\#$%&'()*+,\-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~]+$
+    
+  

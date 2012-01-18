@@ -9,3 +9,5 @@ Feature: Access
     Then the output should contain "No password safe detected, creating one at"
     And  the output should contain "Please enter a new master password:"
     And  the output should contain "No passwords stored"
+    
+  

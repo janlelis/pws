@@ -32,4 +32,6 @@ Feature: Show
     When I run `pws show` interactively
     And  I type "my_master_password_wrong"
     Then the output should contain "Master password:"
-    And  the output should contain "Could not decrypt/load the password safe!"
+    And  the output should contain "NO ACCESS"
+    
+  

@@ -15,7 +15,7 @@ Feature: Master
     When I run `pws` interactively
     And  I type "my_master_password"
     And  the output should contain "Master password:"
-    And  the output should contain "Could not decrypt/load the password safe!"
+    And  the output should contain "NO ACCESS"
     
   Scenario: Change the master password, already passing it as command line paramenter (not recommended)
     Given A safe exists with master password "my_master_password"
@@ -42,4 +42,6 @@ Feature: Master
     When I run `pws master` interactively
     And  I type "my_master_password_wrong"
     Then the output should contain "Master password:"
-    And  the output should contain "Could not decrypt/load the password safe!"
+    And  the output should contain "NO ACCESS"
+    
+  

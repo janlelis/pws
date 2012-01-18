@@ -16,3 +16,5 @@ Feature: Misc
   Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws pws` interactively
     And  the output should contain "Unknown pws command: 'pws'"
+    
+  

@@ -12,6 +12,7 @@ Feature: Get
     And  the clipboard should contain "github_password"
 
   @wait-7s
+  @slow-hack
   Scenario: Get the password for "github" (which exists) and keep it in the clipboard for 5 seconds
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws get github` interactively
@@ -47,4 +48,6 @@ Feature: Get
     When I run `pws get github` interactively
     And  I type "my_master_password_wrong"
     Then the output should contain "Master password:"
-    And  the output should contain "Could not decrypt/load the password safe!"
+    And  the output should contain "NO ACCESS"
+    
+  

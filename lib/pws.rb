@@ -24,7 +24,7 @@ class PWS
       pa %[There is already a password stored for #{key}. You need to remove it before creating a new one!], :red
       return false
     else
-      @pw_data[key] = password || ask_for_password(%[please enter a new password for #{key}], :yellow)
+      @pw_data[key] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
       if @pw_data[key].empty?
         pa %[Cannot add an empty password!], :red
         return false
@@ -62,7 +62,7 @@ class PWS
       return false
     end
   end
-  aliases_for :get, :g, :entry, :[]
+  aliases_for :get, :g, :entry, :copy, :[]
 
   # Adds a password entry with a freshly generated random password
   def generate(
@@ -98,7 +98,7 @@ class PWS
   # Shows a password entry list
   def show
     if @pw_data.empty? 
-      puts %[No passwords stored in #{@pw_file} yet.]
+      pa %[No passwords stored at #{@pw_file}, yet.], :red
     else
       puts Paint["Entries", :underline] + %[ in ] + @pw_file
       puts @pw_data.keys.map{ |key| %[- #{key}\n] }.join
@@ -132,7 +132,7 @@ class PWS
     pwdata_with_redundancy = Marshal.load(pwdata_dump)
     @pw_data          = remove_redundancy(pwdata_with_redundancy)
   rescue
-    fail NoAccess, %[Could not decrypt/load the password safe!]
+    fail NoAccess, %[Could not load and decrypt the password safe!]
   end
 
   # Tries to encrypt and save the password safe into the pwfile
@@ -142,7 +142,7 @@ class PWS
     pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @pw_hash)
     File.open(@pw_file, 'w'){ |f| f.write(pwdata_encrypted) }
   rescue
-    fail NoAccess, %[Could not encrypt/safe the password safe!]
+    fail NoAccess, %[Could not encrypt and save the password safe!]
   end
   
   # Checks if the file is accessible or create a new one
