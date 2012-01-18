@@ -131,6 +131,7 @@ class PWS
     pwdata_dump      = Encryptor.decrypt(pwdata_encrypted, @pw_hash)
     pwdata_with_redundancy = Marshal.load(pwdata_dump)
     @pw_data          = remove_redundancy(pwdata_with_redundancy)
+    pa %[ACCESS GRANTED], :green
   rescue
     fail NoAccess, %[Could not load and decrypt the password safe!]
   end
@@ -155,8 +156,6 @@ class PWS
       print %[Access password safe at #@pw_file | ]
       @pw_hash = Encryptor.hash password || ask_for_password(%[master password])
     end
-  rescue
-    fail NoAccess, %[Could not access the password safe at #@pw_file]
   end
 
   # Adds some redundancy (to conceal how much you have stored)

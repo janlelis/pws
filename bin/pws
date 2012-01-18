@@ -56,7 +56,7 @@ HELP
       pws = PWS.new
       pws.send action, *args
     else
-      pa "Unknown pws command: '#{action}'. Please see 'pws help' for a list of available commands!", :red
+      pa "Unknown command: #{action}\nPlease see `pws help` for a list of available commands!", :red
     end
   end
 rescue PWS::NoAccess
@@ -66,5 +66,5 @@ rescue ArgumentError
   pa $!.message.capitalize, :red
 rescue Interrupt
   system 'stty echo' if $stdin.tty? # ensure terminal's working
-  pa "...canceled", :red
+  pa "..canceled", :red
 end
