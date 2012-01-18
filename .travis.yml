@@ -1,0 +1,8 @@
+rvm:
+  - 1.9.3
+  - 1.9.2
+  - ruby-head
+  - jruby
+
+env
+  - JRUBY_OPTS="--1.9"
