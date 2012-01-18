@@ -9,7 +9,7 @@ require 'paint/pa'
 
 class PWS
   class NoAccess < StandardError; end
-   
+  
   # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
   # Second parameter allows namespaces that get appended to the file name (uses another safe) 
   # You can pass the master password as third parameter (not recommended)
@@ -19,7 +19,19 @@ class PWS
     access_safe(password)
     read_safe
   end
-
+  
+  # Shows a password entry list
+  def show
+    if @pw_data.empty? 
+      pa %[No passwords stored at #{@pw_file}, yet.], :red
+    else
+      puts Paint["Entries", :underline] + %[ in ] + @pw_file
+      puts @pw_data.keys.sort.map{ |key| %[- #{key}\n] }.join
+    end
+    return true
+  end
+  aliases_for :show, :ls, :list, :status
+  
   # Add a password entry, params: name, password (optional, opens prompt if not given)
   def add(key, password = nil)
     if @pw_data[key]
@@ -37,8 +49,8 @@ class PWS
       end
     end
   end
-  aliases_for :add, :a, :set, :store, :create, :[]= # using zucker/alias_for
-
+  aliases_for :add, :set, :store, :create, :[]= # using zucker/alias_for
+  
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = 10)
     if pw_plaintext = @pw_data[key]
@@ -64,8 +76,8 @@ class PWS
       return false
     end
   end
-  aliases_for :get, :g, :entry, :copy, :[]
-
+  aliases_for :get, :entry, :copy, :[]
+  
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
@@ -83,7 +95,7 @@ class PWS
     end
   end
   alias_for :generate, :gen
-
+  
   # Removes a specific password entry
   def remove(key)
     if @pw_data.delete key
@@ -95,20 +107,8 @@ class PWS
       return false
     end
   end
-  aliases_for :remove, :r, :delete
-
-  # Shows a password entry list
-  def show
-    if @pw_data.empty? 
-      pa %[No passwords stored at #{@pw_file}, yet.], :red
-    else
-      puts Paint["Entries", :underline] + %[ in ] + @pw_file
-      puts @pw_data.keys.sort.map{ |key| %[- #{key}\n] }.join
-    end
-    return true
-  end
-  aliases_for :show, :s, :list, :status
-
+  aliases_for :remove, :rm, :del, :delete
+  
   # Changes the master password
   def master(password = nil)
     @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
@@ -116,16 +116,15 @@ class PWS
     pa %[The master password has been changed.], :green
     return true
   end
-  aliases_for :master, :m
-
+  
   # Prevents accidental displaying, e.g. in irb
   def to_s
     %[#<password safe>]
   end
   alias_for :to_s, :inspect
-
+  
   private
-
+  
   # Tries to load and decrypt the password safe from the pwfile
   def read_safe
     pwdata_raw       = File.read(@pw_file)
@@ -137,7 +136,7 @@ class PWS
   rescue
     fail NoAccess, %[Could not load and decrypt the password safe!]
   end
-
+  
   # Tries to encrypt and save the password safe into the pwfile
   def write_safe
     pwdata_with_redundancy = add_redundancy(@pw_data || {})
@@ -159,25 +158,27 @@ class PWS
       @pw_hash = Encryptor.hash password || ask_for_password(%[master password])
     end
   end
-
+  
   # Adds some redundancy (to conceal how much you have stored)
-  def add_redundancy(pwdata)
+  def add_redundancy(pw_data)
     entries  = 8000 + SecureRandom.random_number(4000)
     position = SecureRandom.random_number(entries)
     
-    ret = entries.times.map{ SecureRandom.uuid.chars.to_a.shuffle.join } # or whatever
-    ret[position] = pwdata
+    ret = entries.times.map{ # or whatever... just create noise ;)
+      { SecureRandom.uuid.chars.to_a.shuffle.join => SecureRandom.uuid.chars.to_a.shuffle.join }
+    }
+    ret[position] = pw_data
     ret << position
-
+    
     ret
   end
-
+  
   # And remove it
-  def remove_redundancy(pwdata)
-    position = pwdata[-1]
-    pwdata[position]
+  def remove_redundancy(pw_data)
+    position = pw_data[-1]
+    pw_data[position]
   end
-
+  
   # Prompts the user for a password
   def ask_for_password(prompt = 'new password', *colors)
     print Paint["#{prompt}:".capitalize, *colors] + " "
@@ -185,7 +186,7 @@ class PWS
     pw_plaintext = ($stdin.gets||'').chop  # gets without $stdin would mistakenly read_safe from ARGV
     system 'stty echo'  if $stdin.tty?     # restore terminal output
     puts "\e[999D\e[K\e[1A"                # re-use prompt line in terminal
-
+    
     pw_plaintext
   end
 end

@@ -17,7 +17,7 @@ end
 
 begin
   case @action
-  when :h, :help, :commands, :actions
+  when :'?', :help, :commands, :actions
     puts \
 <<HELP
   
@@ -34,33 +34,33 @@ begin
   
   #{Paint["Available actions", :underline]}
   
-  #{Paint['s', :bold]} / show / list / status
+  #{Paint['ls', :bold]} / list / show / status 
   Lists all available password entries.
   
-  #{Paint['g', :bold]} / get / entry / copy ( name, seconds = 10 )
-  Copies the password for <name> to the clipboard. If second argument is 0,
-  the password will stay in the clipboard.
-  
-  #{Paint['a', :bold]} / add / set / store / create ( name, password = nil )
+  #{Paint['add', :bold]} / set / store / create ( name, password = nil )
   Stores a new password entry. The second argument can be a password, but
   it's recommended not omit it and enter it interactively.
   
-  #{Paint['gen', :bold]} / generate ( name, seconds = 5, length = 64, chars )
+  #{Paint['get', :bold]} / entry / copy ( name, seconds = 10 )
+  Copies the password for <name> to the clipboard. If second argument is 0,
+  the password will stay in the clipboard.
+  
+  #{Paint['gen', :bold]} / generate ( name, seconds = 10, length = 64, chars )
   Generates a new password for <name> and copies it to the clipboard. The
   second argument is the time that get passed to get. The third argument
   sets a password length. The fourth argument allows you to pass a char pool
   that is used for generating the passwords.
   
-  #{Paint['r', :bold]} / remove / delete ( name )
+  #{Paint['rm', :bold]} / remove / del / delete ( name )
   Removes a password entry.
   
-  #{Paint['m', :bold]} / master ( password = nil )
+  #{Paint['master', :bold]} ( password = nil )
   Changes the master password.
   
   #{Paint['v', :bold]} / version
   Displays version and website.
   
-  #{Paint['h', :bold]} / help / commands
+  #{Paint['?', :bold]} / help / commands
   Displays this help.
   
 HELP
