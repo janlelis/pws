@@ -11,6 +11,6 @@
 * Uses SecureRandom instead of rand
 * Fix removing passwords
 * Lots of little fixes and tweaks
-* New default clipboard time: 5 seconds. Another feature: Old clipboard content gets restored after that time
+* New default clipboard time: 10 seconds. Another feature: Old clipboard content gets restored after that time
 
 == See gist https://gist.github.com/658494 for older changes

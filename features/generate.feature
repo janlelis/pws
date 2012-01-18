@@ -3,7 +3,7 @@ Feature: Generate
   As a user
   I want to generate passwords and add them to my password safe
 
-  @wait-7s
+  @wait-11s
   @slow-hack
   Scenario: Generate a new password for "github" and gets it
     Given A safe exists with master password "my_master_password"
@@ -11,7 +11,7 @@ Feature: Generate
     And  I type "my_master_password"
     Then the output should contain "Master password:"
     And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github is now available in your clipboard for 5 seconds."
+    And  the output should contain "The password for github is now available in your clipboard for 10 seconds."
     
   @slow-hack
   Scenario: Generate a new password for "github", second parameter gets passed to the get as keep-in-clipboard time 

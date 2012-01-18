@@ -38,7 +38,7 @@ class PWS
   aliases_for :add, :a, :set, :store, :create, :[]= # using zucker/alias_for
 
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
-  def get(key, seconds = 5)
+  def get(key, seconds = 10)
     if pw_plaintext = @pw_data[key]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
@@ -67,7 +67,7 @@ class PWS
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
-        seconds = 5,
+        seconds = 10,
         length = 64,
         char_pool = (32..126).map(&:chr).join.gsub(/\s/, '')
     )

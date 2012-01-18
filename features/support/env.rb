@@ -35,6 +35,6 @@ Before('@slow-hack') do
   @aruba_io_wait_seconds = 0.5
 end
 
-Before('@wait-7s') do
-  @aruba_timeout_seconds = 5
+Before('@wait-11s') do
+  @aruba_timeout_seconds = 11
 end

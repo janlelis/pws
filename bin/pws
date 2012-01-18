@@ -22,7 +22,7 @@ begin
   #{Paint['s', :bold]} / show / list / status
   Lists all available password entries.
   
-  #{Paint['g', :bold]} / get / entry / copy ( name, seconds = 5 )
+  #{Paint['g', :bold]} / get / entry / copy ( name, seconds = 10 )
   Copies the password for <name> to the clipboard. If second argument is 0,
   the password will stay in the clipboard.
   
