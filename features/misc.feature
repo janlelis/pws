@@ -15,7 +15,7 @@ Feature: Misc
   Scenario: I am calling a task that does not exist
   Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws blubb` interactively
-    And  the output should contain "Unknown command"
+    And  the output should contain "Unknown action"
     And  the output should contain "blubb"
     
   

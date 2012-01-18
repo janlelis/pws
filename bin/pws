@@ -2,22 +2,37 @@
 
 require_relative '../lib/pws'
 
-if $*.empty?
-  action = :show
-  args   = []
+action_or_namespace = $*.shift
+
+if action_or_namespace =~ /^-.*$/
+  @action = $*.shift
+  @namespace = $& unless $& == ?-
 else
-  action = $*.shift[/^-{0,2}(.*)$/, 1].to_sym # also accept first argument, if it is prefixed with - or --
-  args   = [*$*]
+  @action = action_or_namespace
+  @namespace = nil
 end
 
+@action = @action ? @action.to_sym : :show
+@args   = [*$*]
+
 begin
-  case action
-  when :h, :help, :commands
-    puts
-    print "  "
-    pa "Available commands", :underline
+  case @action
+  when :h, :help, :commands, :actions
     puts \
 <<HELP
+  
+  #{Paint["Usage", :underline]}
+  
+  #{Paint['pws', :bold]} [-namespace] action [arguments]
+  
+  #{Paint["Info", :underline]}
+  
+  pws allows you to manage passwords in encryted password files (safes). It
+  operates on the file specified in the environment variable PWS or on "~/.pws".
+  You can apply a namespace as first parameter that will be appended to the
+  filename, e.g. `pws -work show` with normal env would use "~/.pws-work" as safe.
+  
+  #{Paint["Available actions", :underline]}
   
   #{Paint['s', :bold]} / show / list / status
   Lists all available password entries.
@@ -52,10 +67,10 @@ HELP
   when :v, :version
     puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
   else # redirect to safe
-    if PWS.public_instance_methods(false).include?(action)
-      PWS.new.send action, *args
+    if PWS.public_instance_methods(false).include?(@action)
+      PWS.new(nil, @namespace).send @action, *@args
     else
-      pa "Unknown command: #{action}\nPlease see `pws help` for a list of available commands!", :red
+      pa "Unknown action: #@action\nPlease see `pws help` for a list of available commands!", :red
     end
   end
 rescue PWS::NoAccess

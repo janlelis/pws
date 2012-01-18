@@ -10,10 +10,12 @@ require 'paint/pa'
 class PWS
   class NoAccess < StandardError; end
    
-  # Creates a new password safe. Takes the path to the password file, by default: ~/.pws 
-  # You can pass the master password as second parameter (not recommended)
-  def initialize(filename = nil, password = nil)
+  # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
+  # Second parameter allows namespaces that get appended to the file name (uses another safe) 
+  # You can pass the master password as third parameter (not recommended)
+  def initialize(filename = nil, namespace = nil, password = nil)
     @pw_file = File.expand_path(filename || ENV["PWS"] || '~/.pws')
+    @pw_file << namespace if namespace
     access_safe(password)
     read_safe
   end
