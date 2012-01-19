@@ -1,8 +1,7 @@
+language: ruby
 rvm:
+  - 1.8.7
   - 1.9.3
   - 1.9.2
   - ruby-head
-  - jruby
-
-env
-  - JRUBY_OPTS="--1.9"
+  - jruby-19mode
