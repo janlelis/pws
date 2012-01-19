@@ -6,6 +6,8 @@ Please run `pws help` for usage information.
 
 Trust the code by reading the source! Originally based on: http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby
 
+See here for a screenshot: http://rbjl.net/60-pws-the-ruby-powered-command-line-password-manager
+
 Cucumber specs loosely based on https://github.com/thecatwasnot/passwordsafe/blob/master/features/add.feature by thecatwasnot - thanks.
 
 Copyright: 2010-2012 Jan Lelis, MIT-LICENSE
