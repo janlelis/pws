@@ -10,8 +10,8 @@ Feature: Generate
     When I run `pws generate github` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github is now available in your clipboard for 10 seconds."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github is now available in your clipboard for 10 seconds"
     
   @slow-hack
   Scenario: Generate a new password for "github", second parameter gets passed to the get as keep-in-clipboard time 
@@ -19,8 +19,8 @@ Feature: Generate
     When I run `pws generate github 1` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github is now available in your clipboard for 1 second."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github is now available in your clipboard for 1 second"
     
   @slow-hack
   Scenario: Generate a new password for "github", third parameter defines password length 
@@ -28,8 +28,8 @@ Feature: Generate
     When I run `pws generate github 0 10` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github has been copied to your clipboard."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
     And  the clipboard should match /^.{10}$/
     
   @slow-hack
@@ -38,8 +38,8 @@ Feature: Generate
     When I run `pws generate github 0` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github has been copied to your clipboard."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
     And  the clipboard should match /^.{64}$/
     
   @slow-hack
@@ -48,8 +48,8 @@ Feature: Generate
     When I run `pws generate github 0 10 a` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github has been copied to your clipboard."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
     And  the clipboard should match /^a{10}$/
     
   @slow-hack
@@ -58,8 +58,8 @@ Feature: Generate
     When I run `pws generate github 0` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
-    And  the output should contain "The password for github has been copied to your clipboard."
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
     And  the clipboard should match ^[!\"\#$%&'()*+,\-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~]+$
     
   

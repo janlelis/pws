@@ -9,7 +9,7 @@ Feature: Rename
     When I run `pws rename github gh` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "Password entry github has been renamed to gh."
+    And  the output should contain "The password entry github has been renamed to gh"
     When I run `pws show` interactively
     And  I type "my_master_password"
     Then the output from "pws show" should contain "Master password:"

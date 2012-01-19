@@ -10,14 +10,14 @@ Feature: Add
     And  I type "github_password"
     Then the output should contain "Master password:"
     And  the output should contain "Please enter a password for github:"
-    And  the output should contain "The password for github has been added."
+    And  the output should contain "The password for github has been added"
     
   Scenario: Add a new password for "github", already passing it as command line paramenter (not recommended)
     Given A safe exists with master password "my_master_password"
     When I run `pws add github github_password` interactively
     And  I type "my_master_password"
     Then the output should contain "Master password:"
-    And  the output should contain "The password for github has been added."
+    And  the output should contain "The password for github has been added"
 
   Scenario: Try to add a new password for "github" (but it already exists)
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"

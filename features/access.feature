@@ -8,6 +8,6 @@ Feature: Access
     And I type "some_new_master_password"
     Then the output should contain "No password safe detected, creating one at"
     And  the output should contain "Please enter a new master password:"
-    And  the output should contain "No passwords stored"
+    And  the output should contain "There aren't any passwords stored"
     
   

@@ -21,6 +21,7 @@ END{
 }
 
 Around do |_, block|
+  # NOTE: You cannot parallelize the tests, because they use the clipboard and the env var...
   Clipboard.clear
   ENV["PWS"] = File.expand_path('pws-test-' + SecureRandom.uuid)
   

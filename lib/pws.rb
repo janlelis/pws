@@ -23,7 +23,7 @@ class PWS
   # Shows a password entry list
   def show
     if @pw_data.empty? 
-      pa %[No passwords stored at #{@pw_file}, yet.], :red
+      pa %[There aren't any passwords stored at #{@pw_file}, yet], :red
     else
       puts Paint["Entries", :underline] + %[ in ] + @pw_file
       puts @pw_data.keys.sort.map{ |key| %[- #{key}\n] }.join
@@ -44,7 +44,7 @@ class PWS
         return false
       else
         write_safe
-        pa %[The password for #{key} has been added.], :green
+        pa %[The password for #{key} has been added], :green
         return true
       end
     end
@@ -57,7 +57,7 @@ class PWS
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
         Clipboard.copy pw_plaintext
-        pa %[The password for #{key} is now available in your clipboard for #{seconds.to_i} second#{?s if seconds.to_i > 1}.], :green
+        pa %[The password for #{key} is now available in your clipboard for #{seconds.to_i} second#{?s if seconds.to_i > 1}], :green
         begin
           sleep seconds.to_i
         rescue Interrupt
@@ -68,7 +68,7 @@ class PWS
         return true
       else
         Clipboard.copy pw_plaintext
-        pa %[The password for #{key} has been copied to your clipboard.], :green
+        pa %[The password for #{key} has been copied to your clipboard], :green
         return true
       end
     else
@@ -76,7 +76,7 @@ class PWS
       return false
     end
   end
-  aliases_for :get, :entry, :copy, :[]
+  aliases_for :get, :entry, :copy, :password, :for, :[]
   
   # Adds a password entry with a freshly generated random password
   def generate(
@@ -100,10 +100,10 @@ class PWS
   def remove(key)
     if @pw_data.delete key
       write_safe
-      pa %[Password for #{key} has been removed.], :green
+      pa %[The password for #{key} has been removed], :green
       return true
     else
-      pa %[Nothing removed!], :red
+      pa %[No password found for #{key}!], :red
       return false
     end
   end
@@ -120,7 +120,7 @@ class PWS
     else
       @pw_data[new_key] = @pw_data.delete(old_key)
       write_safe
-      pa %[Password entry #{old_key} has been renamed to #{new_key}.], :green
+      pa %[The password entry #{old_key} has been renamed to #{new_key}], :green
       return true
     end
   end
@@ -130,7 +130,7 @@ class PWS
   def master(password = nil)
     @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
     write_safe
-    pa %[The master password has been changed.], :green
+    pa %[The master password has been changed], :green
     return true
   end
   
@@ -208,6 +208,6 @@ class PWS
   end
 end
 
-# See bin/pws for command line action
+# Command line action in bin/pws
 
 # J-_-L

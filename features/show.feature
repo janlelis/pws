@@ -19,13 +19,13 @@ Feature: Show
     Given A safe exists with master password "my_master_password"
     When I run `pws show` interactively
     And  I type "my_master_password"
-    Then the output should contain "No passwords stored"
+    Then the output should contain "There aren't any passwords stored"
     
   Scenario: Show the list ("pws" without show is an alias)
     Given A safe exists with master password "my_master_password"
     When I run `pws show` interactively
     And  I type "my_master_password"
-    Then the output should contain "No passwords stored"
+    Then the output should contain "There aren't any passwords stored"
     
   Scenario: Try to show the list (but the master password is wrong)
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"

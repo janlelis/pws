@@ -1,10 +1,10 @@
-pws is a little password safe (manager) written in Ruby. Please call `pws help` for more information!
+pws is a command-line password safe/manager written in Ruby. Please run `pws help` for usage information.
 
 The passwords normally get stored in ~/.pws. You can change this using the PWS environment variable.
 
 Read the source! Based on: http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby
 
-Cucumber specs based on https://github.com/thecatwasnot/passwordsafe/blob/master/features/add.feature by thecatwasnot - thanks.
+Cucumber specs loosely based on https://github.com/thecatwasnot/passwordsafe/blob/master/features/add.feature by thecatwasnot - thanks.
 
 Copyright: 2010-2012 Jan Lelis, MIT-LICENSE
 
