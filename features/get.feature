@@ -7,7 +7,7 @@ Feature: Get
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws get github 0` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
+    Then the output should contain "Master password:"
     And  the output should contain "The password for github has been copied to your clipboard."
     And  the clipboard should contain "github_password"
 
@@ -16,14 +16,14 @@ Feature: Get
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws get github` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
+    Then the output should contain "Master password:"
     And  the output should contain "The password for github is now available in your clipboard for 10 seconds."
 
   Scenario: Get the password for "github" (which exists) and keep it in the clipboard for 1 second
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws get github 1` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
+    Then the output should contain "Master password:"
     And  the output should contain "The password for github is now available in your clipboard for 1 second."
     
   Scenario: Get the password for "github" (which exists) and ensure that the original clipboard content gets restored
@@ -31,7 +31,7 @@ Feature: Get
     Given A clipboard content of "blubb"
     When I run `pws get github 1` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
+    Then the output should contain "Master password:"
     And  the output should contain "The password for github is now available in your clipboard for 1 second."
     And  the clipboard should contain "blubb"
     
@@ -39,7 +39,7 @@ Feature: Get
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws get google` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
+    Then the output should contain "Master password:"
     And  the output should contain "No password found for google!"
     
   Scenario: Try to get the password for "github" (but the master password is wrong)

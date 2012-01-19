@@ -109,6 +109,23 @@ class PWS
   end
   aliases_for :remove, :rm, :del, :delete
   
+  # Removes a specific password entry
+  def rename(old_key, new_key)
+    if !@pw_data[old_key]
+      pa %[No password found for #{old_key}!], :red
+      return false
+    elsif @pw_data[new_key]
+      pa %[There is already a password stored for #{new_key}. You need to remove it before naming another one #{new_key}!], :red
+      return false
+    else
+      @pw_data[new_key] = @pw_data.delete(old_key)
+      write_safe
+      pa %[Password entry #{old_key} has been renamed to #{new_key}.], :green
+      return true
+    end
+  end
+  aliases_for :rename, :mv, :move
+  
   # Changes the master password
   def master(password = nil)
     @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)

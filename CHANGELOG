@@ -7,8 +7,9 @@
 * New redundancy data mechanism (old file format not compatible anymore)
 * Uses PWS environment variable to determine the password file location (default is still: ~/.pws)
 * Easy namespace support for different password files
-* Different generate method interface
+* Add ability to rename entry keys
 * Remove descriptions (keep it simple)
+* Different generate method interface
 * Uses SecureRandom instead of rand
 * Fix removing passwords
 * Lots of little fixes and tweaks

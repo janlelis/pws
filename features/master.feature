@@ -14,8 +14,8 @@ Feature: Master
     And  the output should contain "The master password has been changed."
     When I run `pws` interactively
     And  I type "my_master_password"
-    And  the output should contain "Master password:"
-    And  the output should contain "NO ACCESS"
+    And  the output from "pws" should contain "Master password:"
+    And  the output from "pws" should contain "NO ACCESS"
     
   Scenario: Change the master password, already passing it as command line paramenter (not recommended)
     Given A safe exists with master password "my_master_password"
@@ -34,8 +34,8 @@ Feature: Master
     And  the output should contain "The master password has been changed."
     When I run `pws` interactively
     And  I type ""
-    Then the output should contain "Master password:"
-    And  the output should contain "No passwords stored"
+    Then the output from "pws" should contain "Master password:"
+    And  the output from "pws" should contain "No passwords stored"
     
   Scenario: Try to change the master password (but enter the old one wrong)
     Given A safe exists with master password "my_master_password"

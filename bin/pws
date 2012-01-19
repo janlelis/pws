@@ -17,6 +17,8 @@ end
 
 begin
   case @action
+  when :v, :version
+    puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
   when :'?', :help, :commands, :actions
     puts \
 <<HELP
@@ -54,6 +56,9 @@ begin
   #{Paint['rm', :bold]} / remove / del / delete ( name )
   Removes a password entry.
   
+  #{Paint['mv', :bold]} / move / rename ( old_name, new_name )
+  Renames a password entry.
+  
   #{Paint['master', :bold]} ( password = nil )
   Changes the master password.
   
@@ -64,8 +69,6 @@ begin
   Displays this help.
   
 HELP
-  when :v, :version
-    puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
   else # redirect to safe
     if PWS.public_instance_methods(false).include?(@action)
       PWS.new(nil, @namespace).send @action, *@args
