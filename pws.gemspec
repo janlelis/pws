@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/janlelis/pws'
   s.summary     = "pws is a cli password safe."
   s.description = "pws is a command-line password safe. Please run `pws help` for usage information."
-  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c}]) + %w{Rakefile pws.gemspec}
+  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} features/**/*]) + %w{Rakefile pws.gemspec}
   s.extra_rdoc_files = ["README", "LICENSE"]
   s.license = 'MIT'
   s.executables = ['pws']

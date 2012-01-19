@@ -32,3 +32,4 @@ require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:spec)
 
 task :default => :spec
+task :test    => :spec
