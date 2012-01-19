@@ -202,7 +202,7 @@ class PWS
     system 'stty -echo' if $stdin.tty?     # no more terminal output
     pw_plaintext = ($stdin.gets||'').chop  # gets without $stdin would mistakenly read_safe from ARGV
     system 'stty echo'  if $stdin.tty?     # restore terminal output
-    puts "\e[999D\e[K\e[1A"                # re-use prompt line in terminal
+    puts "\e[999D\e[K\e[1A" if $stdin.tty? # re-use prompt line in terminal
     
     pw_plaintext
   end

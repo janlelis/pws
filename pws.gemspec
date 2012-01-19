@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
    ("       ┌── " + "info ".ljust(len-2,'%')                         + "─┐\n" +
     " J-_-L │ "   + s.homepage                                       + " │\n" +
     "       ├── " + "usage ".ljust(len-2,'%')                        + "─┤\n" +
-    "       │ "   + "pws ?".ljust(len,' ')                           + " │\n" +
+    "       │ "   + "pws help".ljust(len,' ')                        + " │\n" +
     "       └─"   + '─'*len                                          + "─┘").gsub('%', '─')
 end

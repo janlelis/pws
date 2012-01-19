@@ -19,7 +19,7 @@ begin
   case @action
   when :v, :version
     puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
-  when :'?', :help, :commands, :actions
+  when :help, :actions, :commands
     puts \
 <<HELP
   
@@ -65,7 +65,7 @@ begin
   #{Paint['v', :bold]} / version
   Displays version and website.
   
-  #{Paint['?', :bold]} / help / commands
+  #{Paint['help', :bold]} / actions / commands
   Displays this help.
   
 HELP
