@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.summary     = "pws is a cli password safe."
   s.description = "pws is a command-line password safe. Please run `pws help` for usage information."
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} features/**/*]) + %w{Rakefile pws.gemspec}
-  s.extra_rdoc_files = ["README", "LICENSE"]
+  s.extra_rdoc_files = ["README.md", "LICENSE"]
   s.license = 'MIT'
   s.executables = ['pws']
-  s.add_dependency 'clipboard', '~> 1.0.0'
+  s.add_dependency 'clipboard', '~> 1.0.1'
   s.add_dependency 'zucker',    '>= 12.1'
   s.add_dependency 'paint',     '>= 0.8.4'
   s.add_development_dependency 'rake'

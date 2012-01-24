@@ -15,9 +15,13 @@ Misc
 ---
 Trust the code by reading the source!
 
-Originally based on [http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby]()
+Originally based on [this tutorial](http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby)
 
-Cucumber specs loosely based on [https://github.com/thecatwasnot/passwordsafe/blob/master/features/add.feature]() by thecatwasnot - thanks
+Cucumber specs loosely based on [the ones](https://github.com/thecatwasnot/passwordsafe/blob/master/features/) by thecatwasnot - thanks
+
+Contributions by
+---
+* [brianewing](https://github.com/brianewing/)
 
 Copyright
 ---
