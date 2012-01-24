@@ -1,3 +1,6 @@
+== 0.9.1
+* Add password confirmation when changing master password
+
 == 0.9.0
 * It's working, again! (Sorry for the broken gem version that long time...)
 * Cucumber spec suite :D [based on the one by thecatwasnot]

@@ -128,7 +128,15 @@ class PWS
   
   # Changes the master password
   def master(password = nil)
-    @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
+    if !password
+      new_password = ask_for_password(%[please enter the new master password], :yellow, :bold)
+      password     = ask_for_password(%[please enter the new master password, again], :yellow, :bold)
+      if new_password != password
+        pa %[The passwords don't match!], :red
+        return false
+      end
+    end
+    @pw_hash = Encryptor.hash(password)
     write_safe
     pa %[The master password has been changed], :green
     return true
