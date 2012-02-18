@@ -19,6 +19,15 @@ Originally based on [this tutorial](http://rbjl.net/41-tutorial-build-your-own-p
 
 Cucumber specs loosely based on [the ones](https://github.com/thecatwasnot/passwordsafe/blob/master/features/) by thecatwasnot - thanks
 
+Features coming in 1.0
+---
+Around March or April 2012
+
+* Significantly improved crypto methods
+* Tests for the crypto stuff
+* Different storage format, but will be backwards compatible
+* Little UI tweaks
+
 Contributions by
 ---
 * [brianewing](https://github.com/brianewing/)
