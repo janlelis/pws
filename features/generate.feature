@@ -21,7 +21,18 @@ Feature: Generate
     Then the output should contain "Master password:"
     And  the output should contain "The password for github has been added"
     And  the output should contain "The password for github is now available in your clipboard for 1 second"
-    
+
+  @wait-11s
+  @slow-hack
+  Scenario: Generate a new password for "github", PWS_SECOND set to 5, gets passed to the get as keep-in-clipboard time
+    Given A safe exists with master password "my_master_password"
+    When I set env variable "PWS_SECOND" to "5"
+    And I run `pws generate github` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github is now available in your clipboard for 5 seconds"
+
   @slow-hack
   Scenario: Generate a new password for "github", third parameter defines password length 
     Given A safe exists with master password "my_master_password"
