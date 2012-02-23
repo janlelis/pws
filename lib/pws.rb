@@ -9,6 +9,8 @@ require 'paint/pa'
 
 class PWS
   PWS_SECOND = ENV["PWS_SECOND"] || 10
+  PWS_GEN_LENGTH = ENV["PWS_GEN_LENGTH"] || 64
+  PWS_GEN_CHARPOOL = ENV["PWS_GEN_CHARPOOL"] || (33..126).map(&:chr).join
 
   class NoAccess < StandardError; end
   
@@ -84,8 +86,8 @@ class PWS
   def generate(
         key,
         seconds = PWS_SECOND,
-        length = 64,
-        char_pool = (32..126).map(&:chr).join.gsub(/\s/, '')
+        length = PWS_GEN_LENGTH,
+        char_pool = PWS_GEN_CHARPOOL
     )
     char_pool_size = char_pool.size
     new_pw = (1..length.to_i).map{
