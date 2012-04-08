@@ -167,6 +167,9 @@ class PWS
     pwdata_with_redundancy = add_redundancy(@pw_data || {})
     pwdata_dump      = Marshal.dump(pwdata_with_redundancy)
     pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @pw_hash)
+    unless File.directory?(File.dirname(@pw_file))
+      FileUtils.mkdir_p(File.dirname(@pw_file))
+    end
     File.open(@pw_file, 'w'){ |f| f.write(pwdata_encrypted) }
   rescue
     fail NoAccess, %[Could not encrypt and save the password safe!]
