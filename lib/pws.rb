@@ -177,6 +177,13 @@ class PWS
     if !File.file? @pw_file
       pa %[No password safe detected, creating one at #@pw_file], :blue, :bold
       @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
+      begin
+        unless File.directory?(File.dirname(@pw_file))
+          FileUtils.mkdir_p(File.dirname(@pw_file))
+        end
+      rescue
+        fail NoAccess, %[Could not create the safe path]
+      end
       write_safe
     else
       print %[Access password safe at #@pw_file | ]
