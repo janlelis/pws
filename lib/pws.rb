@@ -163,11 +163,12 @@ class PWS
   end
   
   # Tries to encrypt and save the password safe into the pwfile
-  def write_safe
+  def write_safe(new = false)
     pwdata_with_redundancy = add_redundancy(@pw_data || {})
     pwdata_dump      = Marshal.dump(pwdata_with_redundancy)
     pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @pw_hash)
     File.open(@pw_file, 'w'){ |f| f.write(pwdata_encrypted) }
+    File.chmod(0600, @pw_file) if new
   rescue
     fail NoAccess, %[Could not encrypt and save the password safe!]
   end
@@ -177,7 +178,7 @@ class PWS
     if !File.file? @pw_file
       pa %[No password safe detected, creating one at #@pw_file], :blue, :bold
       @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
-      write_safe
+      write_safe(true)
     else
       print %[Access password safe at #@pw_file | ]
       @pw_hash = Encryptor.hash password || ask_for_password(%[master password])
