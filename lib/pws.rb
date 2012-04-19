@@ -15,25 +15,25 @@ class PWS
   # You can pass the master password as third parameter (not recommended)
   def initialize(filename = nil, namespace = nil, password = nil)
     read_env
-    @pw_file = File.expand_path(filename || @env["PWS"])
-    @pw_file << namespace if namespace
+    @filename = File.expand_path(filename || @env["PWS"])
+    @filename << namespace if namespace
     access_safe(password)
     read_safe
   end
   
   def read_env
     @env = {}
-    @env['PWS']         = ENV["PWS"]        || '~/.pws'
+    @env['PWS']         = ENV["PWS"]         || '~/.pws'
     @env['PWS_SECONDS'] = ENV['PWS_SECONDS'] || 10
   end
   
   # Shows a password entry list
   def show
-    if @pw_data.empty? 
-      pa %[There aren't any passwords stored at #{@pw_file}, yet], :red
+    if @data.empty? 
+      pa %[There aren't any passwords stored at #{@filename}, yet], :red
     else
-      puts Paint["Entries", :underline] + %[ in ] + @pw_file
-      puts @pw_data.keys.sort.map{ |key| %[- #{key}\n] }.join
+      puts Paint["Entries", :underline] + %[ in ] + @filename
+      puts @data.keys.sort.map{ |key| %[- #{key}\n] }.join
     end
     return true
   end
@@ -41,12 +41,12 @@ class PWS
   
   # Add a password entry, params: name, password (optional, opens prompt if not given)
   def add(key, password = nil)
-    if @pw_data[key]
+    if @data[key]
       pa %[There is already a password stored for #{key}. You need to remove it before creating a new one!], :red
       return false
     else
-      @pw_data[key] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
-      if @pw_data[key].empty?
+      @data[key] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
+      if @data[key].empty?
         pa %[Cannot add an empty password!], :red
         return false
       else
@@ -60,7 +60,7 @@ class PWS
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = @env['PWS_SECONDS'])
-    if pw_plaintext = @pw_data[key]
+    if pw_plaintext = @data[key]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
         Clipboard.copy pw_plaintext
@@ -105,7 +105,7 @@ class PWS
   
   # Removes a specific password entry
   def remove(key)
-    if @pw_data.delete key
+    if @data.delete key
       write_safe
       pa %[The password for #{key} has been removed], :green
       return true
@@ -118,14 +118,14 @@ class PWS
   
   # Removes a specific password entry
   def rename(old_key, new_key)
-    if !@pw_data[old_key]
+    if !@data[old_key]
       pa %[No password found for #{old_key}!], :red
       return false
-    elsif @pw_data[new_key]
+    elsif @data[new_key]
       pa %[There is already a password stored for #{new_key}. You need to remove it before naming another one #{new_key}!], :red
       return false
     else
-      @pw_data[new_key] = @pw_data.delete(old_key)
+      @data[new_key] = @data.delete(old_key)
       write_safe
       pa %[The password entry #{old_key} has been renamed to #{new_key}], :green
       return true
@@ -143,7 +143,7 @@ class PWS
         return false
       end
     end
-    @pw_hash = Encryptor.hash(password)
+    @hash = Encryptor.hash(password)
     write_safe
     pa %[The master password has been changed], :green
     return true
@@ -159,11 +159,11 @@ class PWS
   
   # Tries to load and decrypt the password safe from the pwfile
   def read_safe
-    pwdata_raw       = File.read(@pw_file)
+    pwdata_raw       = File.read(@filename)
     pwdata_encrypted = pwdata_raw.force_encoding("ascii")
-    pwdata_dump      = Encryptor.decrypt(pwdata_encrypted, @pw_hash)
+    pwdata_dump      = Encryptor.decrypt(pwdata_encrypted, @hash)
     pwdata_with_redundancy = Marshal.load(pwdata_dump)
-    @pw_data          = remove_redundancy(pwdata_with_redundancy)
+    @data          = remove_redundancy(pwdata_with_redundancy)
     pa %[ACCESS GRANTED], :green
   rescue
     fail NoAccess, %[Could not load and decrypt the password safe!]
@@ -171,24 +171,24 @@ class PWS
   
   # Tries to encrypt and save the password safe into the pwfile
   def write_safe(new = false)
-    pwdata_with_redundancy = add_redundancy(@pw_data || {})
+    pwdata_with_redundancy = add_redundancy(@data || {})
     pwdata_dump      = Marshal.dump(pwdata_with_redundancy)
-    pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @pw_hash)
-    File.open(@pw_file, 'w'){ |f| f.write(pwdata_encrypted) }
-    File.chmod(0600, @pw_file) if new
+    pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @hash)
+    File.open(@filename, 'w'){ |f| f.write(pwdata_encrypted) }
+    File.chmod(0600, @filename) if new
   rescue
     fail NoAccess, %[Could not encrypt and save the password safe!]
   end
   
   # Checks if the file is accessible or create a new one
   def access_safe(password = nil)
-    if !File.file? @pw_file
-      pa %[No password safe detected, creating one at #@pw_file], :blue, :bold
-      @pw_hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
+    if !File.file? @filename
+      pa %[No password safe detected, creating one at #@filename], :blue, :bold
+      @hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
       write_safe(true)
     else
-      print %[Access password safe at #@pw_file | ]
-      @pw_hash = Encryptor.hash password || ask_for_password(%[master password])
+      print %[Access password safe at #@filename | ]
+      @hash = Encryptor.hash password || ask_for_password(%[master password])
     end
   end
   
