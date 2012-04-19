@@ -25,7 +25,16 @@ Feature: Get
     And  I type "my_master_password"
     Then the output should contain "Master password:"
     And  the output should contain "The password for github is now available in your clipboard for 1 second"
-    
+
+  @wait-11s
+  Scenario: Get the password for "github" (which exists) and keep it in the clipboard for 5 seconds when PWS_SECOND is set to 5
+    Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
+    When I set env variable "PWS_SECOND" to "5"
+    And  I run `pws get github` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github is now available in your clipboard for 5 seconds"
+
   Scenario: Get the password for "github" (which exists) and ensure that the original clipboard content gets restored
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     Given A clipboard content of "blubb"

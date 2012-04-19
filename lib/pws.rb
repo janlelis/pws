@@ -8,6 +8,10 @@ require 'zucker/alias_for'
 require 'paint/pa'
 
 class PWS
+  PWS_SECOND = ENV["PWS_SECOND"] || 10
+  PWS_GEN_LENGTH = ENV["PWS_GEN_LENGTH"] || 64
+  PWS_GEN_CHARPOOL = ENV["PWS_GEN_CHARPOOL"] || (33..126).map(&:chr).join
+
   class NoAccess < StandardError; end
   
   # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
@@ -52,7 +56,7 @@ class PWS
   aliases_for :add, :set, :store, :create, :[]= # using zucker/alias_for
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
-  def get(key, seconds = 10)
+  def get(key, seconds = PWS_SECOND)
     if pw_plaintext = @pw_data[key]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
@@ -81,9 +85,9 @@ class PWS
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
-        seconds = 10,
-        length = 64,
-        char_pool = (32..126).map(&:chr).join.gsub(/\s/, '')
+        seconds = PWS_SECOND,
+        length = PWS_GEN_LENGTH,
+        char_pool = PWS_GEN_CHARPOOL
     )
     char_pool_size = char_pool.size
     new_pw = (1..length.to_i).map{

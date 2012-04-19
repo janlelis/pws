@@ -1,4 +1,5 @@
 def create_safe(master, key_hash = {})
+  ENV["PWS_GEN_CHARPOOL"] = ENV["PWS_GEN_LENGTH"] = ENV["PWS_SECOND"] = nil
   restore, $stdout = $stdout, StringIO.new # tmp silence $stdout
   pws = PWS.new ENV["PWS"], nil, master
   key_hash.each{ |key, password|
@@ -33,4 +34,8 @@ end
 
 Then /^the clipboard should match ([^\/].+)$/ do |expected|
   assert_matching_output(expected, Clipboard.paste) 
+end
+
+When /^I set env variable "(\w+)" to "([^"]*)"$/ do |var, value|
+  ENV[var] = value
 end

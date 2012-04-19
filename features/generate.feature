@@ -21,7 +21,18 @@ Feature: Generate
     Then the output should contain "Master password:"
     And  the output should contain "The password for github has been added"
     And  the output should contain "The password for github is now available in your clipboard for 1 second"
-    
+
+  @wait-11s
+  @slow-hack
+  Scenario: Generate a new password for "github", PWS_SECOND set to 5, gets passed to the get as keep-in-clipboard time
+    Given A safe exists with master password "my_master_password"
+    When I set env variable "PWS_SECOND" to "5"
+    And I run `pws generate github` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github is now available in your clipboard for 5 seconds"
+
   @slow-hack
   Scenario: Generate a new password for "github", third parameter defines password length 
     Given A safe exists with master password "my_master_password"
@@ -43,6 +54,17 @@ Feature: Generate
     And  the clipboard should match /^.{64}$/
     
   @slow-hack
+  Scenario: Generate a new password for "github", default length of PWS_GEN_LENGTH
+    Given A safe exists with master password "my_master_password"
+    When I set env variable "PWS_GEN_LENGTH" to "15"
+    And  I run `pws generate github 0` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
+    And  the clipboard should match /^.{15}$/
+
+  @slow-hack
   Scenario: Generate a new password for "github", fourth parameter defines a char pool used for generation 
     Given A safe exists with master password "my_master_password"
     When I run `pws generate github 0 10 a` interactively
@@ -62,4 +84,15 @@ Feature: Generate
     And  the output should contain "The password for github has been copied to your clipboard"
     And  the clipboard should match ^[!\"\#$%&'()*+,\-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~]+$
     
-  
+  @slow-hack
+  Scenario: Generate a new password for "github", the default char pool PWS_GEN_CHARPOOL
+    Given A safe exists with master password "my_master_password"
+    When I set env variable "PWS_GEN_CHARPOOL" to "a"
+    When I run `pws generate github 0` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github has been added"
+    And  the output should contain "The password for github has been copied to your clipboard"
+    And  the clipboard should match ^a{64}$
+
+
