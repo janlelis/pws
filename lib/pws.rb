@@ -172,12 +172,16 @@ class PWS
   end
   
   # Tries to encrypt and save the password safe into the pwfile
-  def write_safe(new = false)
+  def write_safe(new_safe = false)
     pwdata_with_redundancy = add_redundancy(@data || {})
     pwdata_dump      = Marshal.dump(pwdata_with_redundancy)
     pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @hash)
+    if new_safe
+      FileUtils.mkdir_p(File.dirname(@filename))
+      FileUtils.touch(@filename)
+      File.chmod(0600, @filename)
+    end
     File.open(@filename, 'w'){ |f| f.write(pwdata_encrypted) }
-    File.chmod(0600, @filename) if new
   rescue
     fail NoAccess, %[Could not encrypt and save the password safe!]
   end
