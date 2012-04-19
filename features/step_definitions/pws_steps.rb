@@ -1,7 +1,7 @@
 def create_safe(master, key_hash = {})
   ENV["PWS_CHARPOOL"] = ENV["PWS_LENGTH"] = ENV["PWS_SECONDS"] = nil
   restore, $stdout = $stdout, StringIO.new # tmp silence $stdout
-  pws = PWS.new ENV["PWS"], nil, master
+  pws = PWS.new(password: master)
   key_hash.each{ |key, password|
     pws.add key, password
   }

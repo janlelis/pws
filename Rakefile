@@ -28,8 +28,10 @@ task :gemspec do
   gemspec.validate
 end
 
-require 'cucumber/rake/task'
-Cucumber::Rake::Task.new(:spec)
+desc 'Run cucumber and rspec specs'
+task :spec do
+  sh %[rspec spec] and sh %[cucumber features]
+end
 
 task :default => :spec
 task :test    => :spec

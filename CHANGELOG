@@ -1,6 +1,7 @@
 == 0.9.2
-* Creating new safes also creates the directory for them and sets permissions to 0600
 * Configure your favourite waiting time, password length and password char pool using ENV vars
+* More flexible command line argument parsing, allows setting options
+* Creating new safes also creates the directory for them and sets permissions to 0600
 
 == 0.9.1
 * Add password confirmation when changing master password

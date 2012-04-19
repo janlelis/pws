@@ -10,23 +10,26 @@ require 'paint/pa'
 class PWS
   class NoAccess < StandardError; end
   
+  attr_reader :filename, :options
+  
   # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
   # Second parameter allows namespaces that get appended to the file name (uses another safe) 
   # You can pass the master password as third parameter (not recommended)
-  def initialize(filename = nil, namespace = nil, password = nil)
-    read_env
-    @filename = File.expand_path(filename || @env["PWS"])
-    @filename << namespace if namespace
-    access_safe(password)
+  def initialize(options)
+    collect_options(options)
+    @filename = File.expand_path(@options[:filename])
+    @filename << '-' << @options[:namespace] if @options[:namespace]
+    
+    access_safe(options[:password])
     read_safe
   end
   
-  def read_env
-    @env = {}
-    @env['PWS']          = ENV["PWS"]          || '~/.pws'
-    @env['PWS_SECONDS']  = ENV['PWS_SECONDS']  || 10
-    @env['PWS_LENGTH']   = ENV['PWS_LENGTH']   || 64
-    @env['PWS_CHARPOOL'] = ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
+  def collect_options(options = {})
+    @options = options
+    @options[:filename] ||= ENV["PWS"]          || '~/.pws'
+    @options[:seconds]  ||= ENV['PWS_SECONDS']  || 10
+    @options[:length]   ||= ENV['PWS_LENGTH']   || 64
+    @options[:charpool] ||= ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
   end
   
   # Shows a password entry list
@@ -58,10 +61,10 @@ class PWS
       end
     end
   end
-  aliases_for :add, :set, :store, :create, :[]= # using zucker/alias_for
+  aliases_for :add, :set, :store, :create, :[]=
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
-  def get(key, seconds = @env['PWS_SECONDS'])
+  def get(key, seconds = @options[:seconds])
     if pw_plaintext = @data[key]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
@@ -90,13 +93,13 @@ class PWS
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
-        seconds   = @env['PWS_SECONDS'],
-        length    = @env['PWS_LENGTH'],
-        char_pool = @env['PWS_CHARPOOL']
+        seconds   = @options[:seconds],
+        length    = @options[:length],
+        charpool  = @options[:charpool]
     )
-    char_pool_size = char_pool.size
+    charpool_size = charpool.size
     new_pw = (1..length.to_i).map{
-      char_pool[SecureRandom.random_number(char_pool_size)]
+      charpool[SecureRandom.random_number(charpool_size)]
     }.join
     
     if add(key, new_pw) 
