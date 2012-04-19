@@ -8,18 +8,23 @@ require 'zucker/alias_for'
 require 'paint/pa'
 
 class PWS
-  PWS_SECOND = ENV["PWS_SECOND"] || 10
-
   class NoAccess < StandardError; end
   
   # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
   # Second parameter allows namespaces that get appended to the file name (uses another safe) 
   # You can pass the master password as third parameter (not recommended)
   def initialize(filename = nil, namespace = nil, password = nil)
-    @pw_file = File.expand_path(filename || ENV["PWS"] || '~/.pws')
+    read_env
+    @pw_file = File.expand_path(filename || @env["PWS"])
     @pw_file << namespace if namespace
     access_safe(password)
     read_safe
+  end
+  
+  def read_env
+    @env = {}
+    @env['PWS']         = ENV["PWS"]        || '~/.pws'
+    @env['PWS_SECONDS'] = ENV['PWS_SECONDS'] || 10
   end
   
   # Shows a password entry list
@@ -54,7 +59,7 @@ class PWS
   aliases_for :add, :set, :store, :create, :[]= # using zucker/alias_for
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
-  def get(key, seconds = PWS_SECOND)
+  def get(key, seconds = @env['PWS_SECONDS'])
     if pw_plaintext = @pw_data[key]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
@@ -83,7 +88,7 @@ class PWS
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
-        seconds = PWS_SECOND,
+        seconds = @env['PWS_SECONDS'],
         length = 64,
         char_pool = (32..126).map(&:chr).join.gsub(/\s/, '')
     )
