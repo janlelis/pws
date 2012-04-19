@@ -20,3 +20,6 @@ pkg
 
 ## PROJECT::SPECIFIC
 pws-test*
+
+## rvm
+.rvmrc
