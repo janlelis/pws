@@ -23,8 +23,10 @@ class PWS
   
   def read_env
     @env = {}
-    @env['PWS']         = ENV["PWS"]         || '~/.pws'
-    @env['PWS_SECONDS'] = ENV['PWS_SECONDS'] || 10
+    @env['PWS']          = ENV["PWS"]          || '~/.pws'
+    @env['PWS_SECONDS']  = ENV['PWS_SECONDS']  || 10
+    @env['PWS_LENGTH']   = ENV['PWS_LENGTH']   || 64
+    @env['PWS_CHARPOOL'] = ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
   end
   
   # Shows a password entry list
@@ -88,9 +90,9 @@ class PWS
   # Adds a password entry with a freshly generated random password
   def generate(
         key,
-        seconds = @env['PWS_SECONDS'],
-        length = 64,
-        char_pool = (32..126).map(&:chr).join.gsub(/\s/, '')
+        seconds   = @env['PWS_SECONDS'],
+        length    = @env['PWS_LENGTH'],
+        char_pool = @env['PWS_CHARPOOL']
     )
     char_pool_size = char_pool.size
     new_pw = (1..length.to_i).map{
