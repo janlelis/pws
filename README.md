@@ -31,6 +31,8 @@ Around March or April 2012
 Contributions by
 ---
 * [brianewing](https://github.com/brianewing/)
+* [dquimper](https://github.com/dquimper/)
+* [grapz](https://github.com/grapz/)
 
 Copyright
 ---
