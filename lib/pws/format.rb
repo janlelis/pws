@@ -1,4 +1,5 @@
 # encoding: ascii
+require_relative '../pws'
 
 class PWS
   module Format
@@ -6,8 +7,9 @@ class PWS
       # Reads a storage file format and returns the (decrypted) content
       # @return Hash
       def read(data)
-        identifier, *version, encrypted_data = data.unpack("A7C2A*")
-        raise(NoAccess, 'Not a password safe file') unless identifier == '12345678'
+        raise(PWS::NoAccess, 'Password file not valid') if data.size <= 10
+        identifier, *version, encrypted_data = data.unpack("A8C2A*")
+        raise(PWS::NoAccess, 'Not a password file') unless identifier == '12345678'
         
         self[version].read(encrypted_data)
       end
@@ -44,12 +46,12 @@ class PWS
         begin
           mod = const_get(module_name)
         rescue NameError
-          require_relative "format/#{ version.join('.') }"
           begin
-            mod = const_get(module_name)
-          rescue NameError
-            raise(LoadError, "Format version #{ version.join('.') } could not be found within the pws gem") 
+            require_relative "format/#{ version.join('.') }"
+          rescue LoadError
+            raise(PWS::NoAccess, "Format version #{ version.join('.') } could not be found within the pws gem") 
           end
+          mod = const_get(module_name)
         end
         
         mod
