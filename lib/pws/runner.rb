@@ -56,8 +56,8 @@ module PWS::Runner
   
   #{Paint["Available actions", :underline]}
   
-  #{Paint['ls', :bold]} / list / show / status 
-  Lists all available password entries.
+  #{Paint['ls', :bold]} / list / show / status ( pattern = nil )
+  Lists all available password entries. Optionally takes a regex filter.
   
   #{Paint['add', :bold]} / set / store / create ( name, password = nil )
   Stores a new password entry. The second argument can be the password, but

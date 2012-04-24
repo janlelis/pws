@@ -15,6 +15,26 @@ Feature: Show
     And  the output should contain "password"
     And  the output should contain "entries"
 
+  Scenario: Show the list and filter for regex
+    Given A safe exists with master password "my_master_password" and keys
+      | some-abc       | 123 |
+      | password-aDc!  | 345 |
+      | entries        | 678 |
+    When I run `pws show a.c` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Entries"
+    And  the output should contain "some-abc"
+    And  the output should contain "password-aDc!"
+    
+  Scenario: Show the list and filter for regex, but regex is invalid
+    Given A safe exists with master password "my_master_password" and keys
+      | some-abc       | 123 |
+      | password-aDc!  | 345 |
+      | entries        | 678 |
+    When I run `pws show "(("` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Invalid regex"
+
   Scenario: Show the list (but there is no entry yet)
     Given A safe exists with master password "my_master_password"
     When I run `pws show` interactively

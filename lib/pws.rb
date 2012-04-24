@@ -33,14 +33,22 @@ class PWS
   end
   
   # Shows a password entry list
-  def show
+  def show(pattern = nil)
     if @data.empty? 
       pa %[There aren't any passwords stored at #{@filename}, yet], :red
     else
+      if pattern
+        keys = @data.keys.grep /#{pattern}/
+      else
+        keys = @data.keys
+      end
       puts Paint["Entries", :underline] + %[ in ] + @filename
-      puts @data.keys.sort.map{ |key| %[- #{key}\n] }.join
+      puts keys.sort.map{ |key| %[- #{key}\n] }.join
     end
     return true
+  rescue RegexpError
+    pa %[Invalid regex given], :red
+    return false
   end
   aliases_for :show, :ls, :list, :status
   
