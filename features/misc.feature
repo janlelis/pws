@@ -19,4 +19,12 @@ Feature: Misc
     And  the output should contain "Unknown action"
     And  the output should contain "blubb"
     
+  Scenario: I am asking for help
+    When I run `pws --help` interactively
+    And  the output should contain "Usage"
+    And  the output should contain "pws"
+    And  the output should contain "action"
+    And  the output should contain "help"
+    And  the output should contain "namespace"
+    And  the output should contain "master"
   
