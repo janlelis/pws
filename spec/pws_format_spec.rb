@@ -8,11 +8,29 @@ describe PWS::Format do
       @wrong_identifier = "012345678\x01\x00data"
       @too_short1       = "12345678\x01"
       @too_short2       = "12345678"
+      @legacy           = "data"
+    end
+    
+    before(:each) do
+      @options = {
+        key: 'value',
+      }
     end
     
     it 'delegates to the proper format reader if data is in correct format' do
-      PWS::Format[1.0].should_receive(:read).with('data')
-      PWS::Format.read(@correct)
+      PWS::Format[1.0].should_receive(:read).with('data', @options)
+      PWS::Format.read(@correct, @options)
+    end
+    
+    it 'has takes a boolean legacy option as 2nd paramater that falls back to 0.9' do
+      PWS::Format[0.9].should_receive(:read).with('data', @options)
+      PWS::Format.read(@legacy, @options.merge(legacy: true))
+    end
+    
+    it 'cannot read legacy files without legacy option' do
+      proc{ PWS::Format.read(@legacy, @options) }.should raise_error(
+        PWS::NoAccess
+      )
     end
     
     it 'cannot read unknown versions and reports that' do
@@ -42,15 +60,16 @@ describe PWS::Format do
   end
   
   describe '.write' do
-    before(:each) do
-      @data     = 'some_data_to_be_written'
-      @settings = { version: 1.0 }
-    end
-    
-    it 'delegates to the proper format writer, determined by settings[:version], passing the data' do
-      PWS::Format[1.0].should_receive(:write).with(@data, {})
-      PWS::Format.write(@data, @settings)
-    end
+    pending
+#    before(:each) do
+#      @data     = 'some_data_to_be_written'
+#      @settings = { version: 1.0 }
+#    end
+#    
+#    it 'delegates to the proper format writer, determined by settings[:version], passing the data' do
+#      PWS::Format[1.0].should_receive(:write).with(@data, {})
+#      PWS::Format.write(@data, @settings)
+#    end
   end
   
   describe '.[]' do

@@ -1,3 +1,3 @@
 class PWS
-  VERSION = '0.9.2'.dup
+  VERSION = '1.0.0.pre.1'.dup
 end

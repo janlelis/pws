@@ -1,5 +1,7 @@
+# encoding: ascii
 require_relative 'pws/version'
 require_relative 'pws/encryptor'
+require_relative 'pws/format'
 
 require 'fileutils'
 require 'clipboard'
@@ -10,7 +12,7 @@ require 'paint/pa'
 class PWS
   class NoAccess < StandardError; end
   
-  attr_reader :filename, :options
+  attr_reader :filename
   
   # Creates a new password safe. Takes the path to the password file, by default: ~/.pws
   # Second parameter allows namespaces that get appended to the file name (uses another safe) 
@@ -20,16 +22,7 @@ class PWS
     @filename = File.expand_path(@options[:filename])
     @filename << '-' << @options[:namespace] if @options[:namespace]
     
-    access_safe(options[:password])
-    read_safe
-  end
-  
-  def collect_options(options = {})
-    @options = options
-    @options[:filename] ||= ENV["PWS"]          || '~/.pws'
-    @options[:seconds]  ||= ENV['PWS_SECONDS']  || 10
-    @options[:length]   ||= ENV['PWS_LENGTH']   || 64
-    @options[:charpool] ||= ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
+    read_safe(options[:password])
   end
   
   # Shows a password entry list
@@ -148,15 +141,14 @@ class PWS
   
   # Changes the master password
   def master(password = nil)
-    if !password
+    unless @password = password
       new_password = ask_for_password(%[please enter the new master password], :yellow, :bold)
-      password     = ask_for_password(%[please enter the new master password, again], :yellow, :bold)
-      if new_password != password
+      @password    = ask_for_password(%[please enter the new master password, again], :yellow, :bold)
+      if new_password != @password
         pa %[The passwords don't match!], :red
         return false
       end
     end
-    @hash = Encryptor.hash(password)
     write_safe
     pa %[The master password has been changed], :green
     return true
@@ -169,64 +161,57 @@ class PWS
   alias_for :to_s, :inspect
   
   private
-  
-  # Tries to load and decrypt the password safe from the pwfile
-  def read_safe
-    pwdata_raw       = File.read(@filename)
-    pwdata_encrypted = pwdata_raw.force_encoding("ascii")
-    pwdata_dump      = Encryptor.decrypt(pwdata_encrypted, @hash)
-    pwdata_with_redundancy = Marshal.load(pwdata_dump)
-    @data          = remove_redundancy(pwdata_with_redundancy)
-    pa %[ACCESS GRANTED], :green
-  rescue
-    fail NoAccess, %[Could not load and decrypt the password safe!]
+
+  def collect_options(options = {})
+    @options = options
+    @options[:filename] ||= ENV["PWS"]          || '~/.pws'
+    @options[:seconds]  ||= ENV['PWS_SECONDS']  || 10
+    @options[:length]   ||= ENV['PWS_LENGTH']   || 64
+    @options[:charpool] ||= ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
+    @options[:legacy]   ||= !!ENV['PWS_LEGACY'] || false
   end
   
+  # Checks if the file is accessible or create a new one
+  # Tries to load and decrypt the password safe from the pwfile
+  def read_safe(password = nil)
+    create_safe(password) unless File.file?(@filename)
+    
+    print %[Access password safe at #@filename | ]
+    @password = password || ask_for_password(%[master password])
+    encrypted_data = File.read(@filename)
+    
+    @data = Format.read(
+      encrypted_data,
+      legacy: @options[:legacy],
+      password: @password,
+    )
+    
+    #rescue
+     # fail NoAccess, %[Could not decrypt the password safe!]
+    pa %[ACCESS GRANTED], :green
+  end
+  
+  
   # Tries to encrypt and save the password safe into the pwfile
-  def write_safe(new_safe = false)
-    pwdata_with_redundancy = add_redundancy(@data || {})
-    pwdata_dump      = Marshal.dump(pwdata_with_redundancy)
-    pwdata_encrypted = Encryptor.encrypt(pwdata_dump, @hash)
-    if new_safe
-      FileUtils.mkdir_p(File.dirname(@filename))
-      FileUtils.touch(@filename)
-      File.chmod(0600, @filename)
+  def write_safe
+    if @options[:legacy]
+      print %[TODO Legacy warning]
     end
-    File.open(@filename, 'w'){ |f| f.write(pwdata_encrypted) }
+    encrypted_data = Format[VERSION].write(
+      @data,
+      password: @password,
+    )
+    File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
   rescue
     fail NoAccess, %[Could not encrypt and save the password safe!]
   end
   
-  # Checks if the file is accessible or create a new one
-  def access_safe(password = nil)
-    if !File.file? @filename
-      pa %[No password safe detected, creating one at #@filename], :blue, :bold
-      @hash = Encryptor.hash password || ask_for_password(%[please enter a new master password], :yellow, :bold)
-      write_safe(true)
-    else
-      print %[Access password safe at #@filename | ]
-      @hash = Encryptor.hash password || ask_for_password(%[master password])
-    end
-  end
-  
-  # Adds some redundancy (to conceal how much you have stored)
-  def add_redundancy(pw_data)
-    entries  = 8000 + SecureRandom.random_number(4000)
-    position = SecureRandom.random_number(entries)
-    
-    ret = entries.times.map{ # or whatever... just create noise ;)
-      { SecureRandom.uuid.chars.to_a.shuffle.join => SecureRandom.uuid.chars.to_a.shuffle.join }
-    }
-    ret[position] = pw_data
-    ret << position
-    
-    ret
-  end
-  
-  # And remove it
-  def remove_redundancy(pw_data)
-    position = pw_data[-1]
-    pw_data[position]
+  def create_safe(password = nil)
+    pa %[No password safe detected, creating one at #@filename], :blue, :bold
+    @password = password || ask_for_password(%[please enter a new master password], :yellow, :bold)
+    FileUtils.mkdir_p(File.dirname(@filename))
+    FileUtils.touch(@filename)
+    File.chmod(0600, @filename)
   end
   
   # Prompts the user for a password

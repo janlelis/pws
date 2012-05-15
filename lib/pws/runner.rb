@@ -17,6 +17,8 @@ module PWS::Runner
           # ignore
         when /^--(help|version)$/
           return [$1.to_sym, [], {}]
+        when /^--(legacy)$/
+          options[:legacy] = true
         when /^--/
           # parse option in next iteration
         when /^-([^-].*)$/
@@ -97,10 +99,10 @@ HELP
         end
       end
     rescue PWS::NoAccess
-      # pa $!.message.capitalize, :red, :bold
+       pa $!.message.capitalize, :red, :bold
       pa "NO ACCESS", :red, :bold
-    rescue ArgumentError
-      pa $!.message.capitalize, :red
+  #  rescue ArgumentError
+   #   pa $!.message.capitalize, :red
     rescue Interrupt
       system 'stty echo' if $stdin.tty? # ensure terminal's working
       pa "..canceled", :red

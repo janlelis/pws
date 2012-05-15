@@ -1,6 +1,6 @@
 == 0.9.2
 * Configure your favourite waiting time, password length and password char pool using ENV options
-* More flexible command line argument parsing, allows setting options
+* More flexible command line argument parsing, allows allows overriding of the ENV options
 * Show action takes optional regex filter argument
 * Creating new safes also creates the directory for them and sets permissions to 0600
 
