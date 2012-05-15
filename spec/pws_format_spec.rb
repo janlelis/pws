@@ -60,16 +60,27 @@ describe PWS::Format do
   end
   
   describe '.write' do
-    pending
-#    before(:each) do
-#      @data     = 'some_data_to_be_written'
-#      @settings = { version: 1.0 }
-#    end
-#    
-#    it 'delegates to the proper format writer, determined by settings[:version], passing the data' do
-#      PWS::Format[1.0].should_receive(:write).with(@data, {})
-#      PWS::Format.write(@data, @settings)
-#    end
+    before(:each) do
+      @data     = 'some_data_to_be_written'
+    end
+    
+    it 'delegates to the proper format writer, determined by options[:version], passing the data, deleting the version from the options hash' do
+      options = { version: 1.0 }
+      PWS::Format[1.0].should_receive(:write).with(@data, {})
+      PWS::Format.write(@data, options)
+    end
+    
+    it 'uses the current PWS::VERSION file format if no other is given' do
+      PWS::Format[PWS::VERSION].should_receive(:write).with(@data, {})
+      PWS::Format.write(@data, {})
+    end
+    
+    it 'writes the identifier and version header' do
+      PWS::Format.write(
+        @data, { version: 1.0, password: '123' }
+      )[0...10].should =~ "12345678\x01\x00"
+    end
+    
   end
   
   describe '.[]' do

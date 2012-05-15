@@ -1,14 +1,23 @@
 require_relative '../lib/pws/format/0.9'
 
 describe PWS::Format::V0_9 do
+  describe '.write' do
+    it 'raises a NotImplementedError' do
+      proc{ 
+        PWS::Format::V0_9.write('data', {})
+      }.should raise_error(NotImplementedError)
+    end
+  end
+  
   describe '.read' do
     before(:all) do
       @password    = 'password'
       @correct     = File.read('spec/fixtures/0.9/correct')
       # @v1_0        = File.read('spec/fixtures/1.0/correct')
-#      @wrongly_marshalled = File.read('spec/fixtures/0.9/wrongly_marshalled')
-      @invalid_iv         = File.read('spec/fixtures/0.9/invalid_iv')
-      @wrongly_encrypted  = File.read('spec/fixtures/0.9/wrongly_encrypted')
+      @invalid_iv          = File.read('spec/fixtures/0.9/invalid_iv')
+      @invalid_encryption  = File.read('spec/fixtures/0.9/invalid_encryption')
+      @invalid_marshalling = File.read('spec/fixtures/0.9/invalid_marshalling')
+      @manipulated_file    = File.read('spec/fixtures/0.9/manipulated_file')
     end
     
     it 'works correctly for a valid file' do
@@ -16,23 +25,36 @@ describe PWS::Format::V0_9 do
         @data = PWS::Format::V0_9.read(@correct, password: @password)
       }.should_not raise_error
       @data.should be_a Hash
-      @data['github'].should == '123456'
+      @data['github'][:password].should == '123456'
     end
     
 #    it 'cannot read 1.0 safes' do
 #      proc{ PWS::Format::V0_9.read(@v1_0) }.should raise_error(PWS::NoAccess)
 #    end
     
-#    it 'cannot read broken marshalled files' do
-#      proc{ PWS::Format::V0_9.read(@wrongly_marshalled) }.should raise_error(PWS::NoAccess)
-#    end
-#    
     it 'cannot read files with invalid iv' do
-      proc{ PWS::Format::V0_9.read(@invalid_iv) }.should raise_error(PWS::NoAccess)
+      proc{
+        PWS::Format::V0_9.read(@invalid_iv, password: @password)
+      }.should raise_error(PWS::NoAccess)
     end
 
-    it 'cannot read broken encrypted files' do
-      proc{ PWS::Format::V0_9.read(@wrongly_encrypted) }.should raise_error(PWS::NoAccess)
+    it 'cannot read files with invalid encryption' do
+      proc{
+        PWS::Format::V0_9.read(@invalid_encryption, password: @password)
+      }.should raise_error(PWS::NoAccess)
+    end
+    
+    it 'cannot read files with invalid marshalling' do
+      proc{
+        PWS::Format::V0_9.read(@invalid_marshalling, password: @password)
+      }.should raise_error(PWS::NoAccess)
+    end
+    
+    # This is why there are now integrity checks
+    it 'BUG: sometimes can read invalid files' do
+      proc{
+        PWS::Format::V0_9.read(@manipulated_file, password: @password)
+      }.should_not raise_error
     end
   end
 end
