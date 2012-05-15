@@ -22,7 +22,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'cucumber'
   s.add_development_dependency 'aruba'
-
+  s.add_development_dependency 'guard-cucumber'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency 'ripltools'
+  s.add_development_dependency 'ruby-debug19'
+  
   len = s.homepage.size
   s.post_install_message = \
    ("       ┌── " + "info ".ljust(len-2,'%')                         + "─┐\n" +
