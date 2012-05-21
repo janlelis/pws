@@ -11,8 +11,9 @@ class PWS
     # see at bottom block for a format description
     module V1_0
       TEMPLATE = 'A64 A16 L> A64 A*'
-      MAX_ITERATIONS     = 4_294_967_296
-      DEFAULT_ITERATIONS =       100_000
+      DEFAULT_ITERATIONS =       1_000
+      MAX_ITERATIONS     = 4_294_967_295
+      MAX_ENTRY_LENGTH   = 4_294_967_295
     
       class << self
         def write(application_data, options = {})
@@ -87,21 +88,36 @@ class PWS
         end
         
         def marshal(application_data, options = {})
-          res = []
-          number_of_dummies = 8000 + SecureRandom.random_number(4000)
-          res << number_of_dummies.to_s << "\n"
+          number_of_dummy_bytes = 5000 + SecureRandom.random_number(30000)
+          ordered_data = application_data.to_a
+          [
+            number_of_dummy_bytes,
+            application_data.size,
+            SecureRandom.random_bytes(number_of_dummy_bytes) +
+            data_to_string(ordered_data.map{ |_, e| e[:password] }) +
+            data_to_string(ordered_data.map{ |e, _| e }) +
+            data_to_string(ordered_data.map{ |_, e| e[:timestamp].to_i }) +
+            SecureRandom.random_bytes(5000 + SecureRandom.random_number(30000))
+          ].pack('L> L> A*')
         end
         
         def unmarshal(saved_data, options = {})
-          Marshal.load(saved_data)
-        end
-        
-        def marshal(application_data, options = {})
-          Marshal.dump(application_data)
-        end
-        
-        def unmarshal(saved_data, options = {})
-          Marshal.load(saved_data)
+          number_of_dummy_bytes, data_size, raw_data = saved_data.unpack('L> L> A*')
+          i = number_of_dummy_bytes
+          passwords, names, timestamps = 3.times.map{
+            data_size.times.map{
+              next_element, i = string_to_data(raw_data, i)
+              next_element
+            }
+          }
+          
+          Hash[
+            names.zip(
+              passwords.zip(timestamps).map{ |e,f|
+                { password: e, timestamp: f }
+              }
+            )
+          ]
         end
         
         private
@@ -122,6 +138,22 @@ class PWS
           ).digest
         end
         
+        def data_to_string(array)
+          array.map{ |e|
+            e = e.to_s
+            s = e.size
+            raise(ArgumentError, 'Entry too long') if s > MAX_ENTRY_LENGTH
+            [s, e].pack('L> A*')
+          }.join
+        end
+        
+        def string_to_data(string, pos)
+          next_length = string[pos..pos+4].unpack('L>')[0]
+          new_pos = pos + 4 + next_length
+          res = string[pos+4...new_pos].unpack('A*')[0]
+          
+          [res, new_pos]
+        end
       end#self
     end#V1_0
   end
@@ -140,11 +172,11 @@ Bytes  Data            Description
 
 =begin MARSHAL FORMAT
 
-number of dummy entries before data
-dummy entries
-names
+number of dummy bytes before real data
+dummy bytes
 passwords
+names
 timestamps
-dummy entries
+dummy bytes
 
 =end
