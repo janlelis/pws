@@ -1,3 +1,10 @@
+== 1.0.0
+* New file format, the old one is converted by doing `pws convert 0.9`
+* Password files have now better integrity checks
+* Bruteforce protection by using pbkdf2, you can choose the number of iterations (default: 100_000)
+* Store and display updated_at timestamp for entries
+* Don't rely on Ruby marshalling
+
 == 0.9.2
 * Configure your favourite waiting time, password length and password char pool using ENV options
 * More flexible command line argument parsing, allows allows overriding of the ENV options
