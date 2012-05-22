@@ -98,11 +98,11 @@ HELP
           pa "Unknown action: #{action}\nPlease see `pws --help` for a list of available commands!", :red
         end
       end
-    #rescue PWS::NoAccess
-    #   pa $!.message.capitalize, :red, :bold
-    #  pa "NO ACCESS", :red, :bold
-  #  rescue ArgumentError
-   #   pa $!.message.capitalize, :red
+    rescue PWS::NoAccess
+      # pa $!.message.capitalize, :red, :bold
+      pa "NO ACCESS", :red, :bold
+    rescue ArgumentError
+      pa $!.message.capitalize, :red
     rescue Interrupt
       system 'stty echo' if $stdin.tty? # ensure terminal's working
       pa "..canceled", :red

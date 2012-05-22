@@ -18,6 +18,7 @@ BEGIN{
 END{
   Clipboard.clear
   ENV["PWS"] = $original_pws_file
+  FileUtils.rm Dir['pws-test-*']
 }
 
 Around do |_, block|
@@ -33,7 +34,7 @@ end
 # Hacks
 
 Before('@slow-hack') do
-  @aruba_io_wait_seconds = 0.5
+  @aruba_io_wait_seconds = 2 # 0.5 would be ok... except for "output from"
 end
 
 Before('@wait-11s') do

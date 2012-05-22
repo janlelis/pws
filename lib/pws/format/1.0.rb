@@ -10,8 +10,8 @@ class PWS
     # PWS file format for versions ~> 1.0.0
     # see at bottom block for a format description
     module V1_0
-      TEMPLATE = 'A64 A16 L> A64 A*'.freeze
-      DEFAULT_ITERATIONS =       100_000
+      TEMPLATE = 'a64 a16 L> a64 a*'.freeze
+      DEFAULT_ITERATIONS =        80_000
       MAX_ITERATIONS     =    10_000_000
       MAX_ENTRY_LENGTH   = 4_294_967_295 # L>
     
@@ -29,14 +29,14 @@ class PWS
               iterations > MAX_ITERATIONS || iterations < 2
           
           salt = SecureRandom.random_bytes(64)
+          iv  = Encryptor.random_iv
           
           encryption_key, hmac_key = kdf(
             options[:password],
             salt,
             iterations,
-          ).unpack('A256 A256')
+          ).unpack('a256 a256')
           
-          iv  = Encryptor.random_iv
           sha = hmac(hmac_key, salt, iv, iterations, unencrypted_data)
           
           encrypted_data = Encryptor.encrypt(
@@ -59,7 +59,7 @@ class PWS
             array_to_data_string(ordered_data.map{ |e, _| e }) +
             array_to_data_string(ordered_data.map{ |_, e| e[:timestamp].to_i }) +
             SecureRandom.random_bytes(100_000 + SecureRandom.random_number(1_000_000))
-          ].pack('L> L> A*')
+          ].pack('L> L> a*')
         end
         
         # - - -
@@ -85,7 +85,7 @@ class PWS
             options[:password],
             salt,
             iterations,
-          ).unpack('A256 A256')
+          ).unpack('a256 a256')
           
           begin
             unencrypted_data = Encryptor.decrypt(
@@ -104,7 +104,7 @@ class PWS
         end
         
         def unmarshal(saved_data, options = {})
-          number_of_dummy_bytes, data_size, raw_data = saved_data.unpack('L> L> A*')
+          number_of_dummy_bytes, data_size, raw_data = saved_data.unpack('L> L> a*')
           i = number_of_dummy_bytes
           passwords, names, timestamps = 3.times.map{
             data_size.times.map{
@@ -144,14 +144,14 @@ class PWS
             e = e.to_s
             s = e.size
             raise(ArgumentError, 'Entry too long') if s > MAX_ENTRY_LENGTH
-            [s, e].pack('L> A*')
+            [s, e].pack('L> a*')
           }.join
         end
         
         def get_next_data_string(string, pos)
           next_length = string[pos..pos+4].unpack('L>')[0]
           new_pos = pos + 4 + next_length
-          res = string[pos+4...new_pos].unpack('A*')[0]
+          res = string[pos+4...new_pos].unpack('a*')[0]
           
           [res, new_pos]
         end

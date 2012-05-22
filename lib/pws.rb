@@ -187,12 +187,8 @@ class PWS
       )
     else
       create_safe(password)
-      @data = {}
     end 
-    
-    
-    #rescue
-     # fail NoAccess, %[Could not decrypt the password safe!]
+
     pa %[ACCESS GRANTED], :green
   end
   
@@ -209,8 +205,6 @@ class PWS
       iterations: @options[:iterations],
     )
     File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
-  #rescue
-  #  fail NoAccess, %[Could not encrypt and save the password safe!]
   end
   
   def create_safe(password = nil)

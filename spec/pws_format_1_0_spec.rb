@@ -132,22 +132,35 @@ describe PWS::Format::V1_0 do
     end
     
     it 'keeps the same data when reading own output' do
-      res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 5)
-      new_data = PWS::Format.read(res,    version: 1.0, password: @password, iterations: 5)
+      res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 1000)
+      new_data = PWS::Format.read(res,    version: 1.0, password: @password)
       @data.should == new_data
     end
     
     describe 'stress' do
-      it 'survives 1000 write-read iterations correctly' do
-        old_data = @data
-        30.times{ |i|
-          res      = PWS::Format.write(old_data, version: 1.0, password: @password, iterations: 5)
-          new_data = PWS::Format.read(res,   version: 1.0, password: @password)
-          old_data.should == new_data
-          old_data = new_data
+      it 'no errors on 400 write-reads (1/3)' do
+        300.times{
+          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          @data.should == new_data
         }
       end
       
+      it 'no errors on 400 write-reads (2/3)' do
+        300.times{
+          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          @data.should == new_data
+        }
+      end
+      
+      it 'no errors on 400 write-reads (3/3)' do
+        300.times{
+          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          @data.should == new_data
+        }
+      end
     end
   end
 end

@@ -17,7 +17,7 @@ class PWS
           raise(PWS::NoAccess, 'Password file not valid') if \
               saved_data.size <= 11
           identifier, *version, encrypted_data =
-              saved_data.unpack("A8 C2 x A*")
+              saved_data.unpack("a8 C2 x a*")
           raise(PWS::NoAccess, 'Password file not valid') unless \
               identifier == '12345678'
         end
@@ -32,7 +32,7 @@ class PWS
           '12345678',
           *version_to_array(version),
           self[version].write(application_data, options),
-        ].pack('A8 C2 x A*')
+        ].pack('a8 C2 x a*')
       end
       
       # Returns the proper file format module for a given version

@@ -20,13 +20,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'zucker',    '>= 12.1'
   s.add_dependency 'paint',     '>= 0.8.4'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'cucumber'
   s.add_development_dependency 'aruba'
-  s.add_development_dependency 'guard-cucumber'
+  s.add_development_dependency 'cucumber'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'guard-cucumber'
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'ripltools'
-  s.add_development_dependency 'ruby-debug19'
+  s.add_development_dependency 'irbtools'
+  # s.add_development_dependency 'ruby-debug19'
   
   len = s.homepage.size
   s.post_install_message = \

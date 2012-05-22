@@ -2,14 +2,6 @@ require_relative '../lib/pws/format/0.9'
 require_relative '../lib/pws/format/1.0'
 
 describe PWS::Format::V0_9 do
-  describe '.write' do
-    it 'raises a NotImplementedError' do
-      proc{ 
-        PWS::Format::V0_9.write('data', {})
-      }.should raise_error(NotImplementedError)
-    end
-  end
-  
   describe '.read' do
     before(:all) do
       @password    = 'password'
@@ -63,6 +55,14 @@ describe PWS::Format::V0_9 do
       proc{
         PWS::Format::V0_9.read(@manipulated_file, password: @password)
       }.should_not raise_error
+    end
+  end
+  
+  describe '.write' do
+    it 'raises a NotImplementedError' do
+      proc{ 
+        PWS::Format::V0_9.write('data', {})
+      }.should raise_error(NotImplementedError)
     end
   end
 end
