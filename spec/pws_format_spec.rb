@@ -3,9 +3,9 @@ require_relative '../lib/pws/format'
 describe PWS::Format do
   describe '.read' do
     before(:all) do
-      @correct          = "12345678\x01\x00data"
-      @unknown_version  = "12345678\xfd\x00data"
-      @wrong_identifier = "012345678\x01\x00data"
+      @correct          = "12345678\x01\x00\x00data"
+      @unknown_version  = "12345678\xfd\x00\x00data"
+      @wrong_identifier = "012345678\x01\x00\x00data"
       @too_short1       = "12345678\x01"
       @too_short2       = "12345678"
       @legacy           = "data"
@@ -43,7 +43,7 @@ describe PWS::Format do
     it 'cannot read if identifier is unknown and reports that' do
       proc{ PWS::Format.read(@wrong_identifier) }.should raise_error(
         PWS::NoAccess,
-        'Not a password file',
+        'Password file not valid',
       )
     end
     
@@ -61,7 +61,7 @@ describe PWS::Format do
   
   describe '.write' do
     before(:each) do
-      @data     = 'some_data_to_be_written'
+      @data = { some:  {password: 'data_to_be_written' } }
     end
     
     it 'delegates to the proper format writer, determined by options[:version], passing the data, deleting the version from the options hash' do
@@ -78,7 +78,7 @@ describe PWS::Format do
     it 'writes the identifier and version header' do
       PWS::Format.write(
         @data, { version: 1.0, password: '123' }
-      )[0...10].should =~ "12345678\x01\x00"
+      )[0...11].should == "12345678\x01\x00\x00"
     end
     
   end

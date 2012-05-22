@@ -11,7 +11,7 @@ module PWS::Encryptor
       crypt(
         :decrypt,
         encrypted_data,
-        options[:hash],
+        options[:key],
         options[:iv],
       )
     end
@@ -20,7 +20,7 @@ module PWS::Encryptor
       crypt(
         :encrypt,
         unecrypted_data,
-        options[:hash],
+        options[:key],
         options[:iv],
       )
     end
@@ -33,10 +33,10 @@ module PWS::Encryptor
     
     # Encrypts or decrypts the data with the password hash as key
     # NOTE: encryption exceptions do not get caught here!
-    def crypt(decrypt_or_encrypt, data, hash, iv)
+    def crypt(decrypt_or_encrypt, data, key, iv)
       c = OpenSSL::Cipher.new(CIPHER)
       c.send(decrypt_or_encrypt.to_sym)
-      c.key = hash
+      c.key = key
       c.iv  = iv
       c.update(data) << c.final
     end

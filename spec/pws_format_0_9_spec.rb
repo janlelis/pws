@@ -1,4 +1,5 @@
 require_relative '../lib/pws/format/0.9'
+require_relative '../lib/pws/format/1.0'
 
 describe PWS::Format::V0_9 do
   describe '.write' do
@@ -13,7 +14,7 @@ describe PWS::Format::V0_9 do
     before(:all) do
       @password    = 'password'
       @correct     = File.read('spec/fixtures/0.9/correct')
-      # @v1_0        = File.read('spec/fixtures/1.0/correct')
+      @v1_0        = File.read('spec/fixtures/1.0/correct')
       @invalid_iv          = File.read('spec/fixtures/0.9/invalid_iv')
       @invalid_encryption  = File.read('spec/fixtures/0.9/invalid_encryption')
       @invalid_marshalling = File.read('spec/fixtures/0.9/invalid_marshalling')
@@ -28,9 +29,17 @@ describe PWS::Format::V0_9 do
       @data['github'][:password].should == '123456'
     end
     
-#    it 'cannot read 1.0 safes' do
-#      proc{ PWS::Format::V0_9.read(@v1_0) }.should raise_error(PWS::NoAccess)
-#    end
+    it 'cannot read 1.0 safes' do
+      proc{
+        PWS::Format::V0_9.read(@v1_0, password: @password)
+      }.should raise_error(PWS::NoAccess)
+    end
+    
+    it 'cannot read files with wrong password' do
+      proc{
+        PWS::Format::V0_9.read(@correct, password: '12345678')
+      }.should raise_error(PWS::NoAccess)
+    end
     
     it 'cannot read files with invalid iv' do
       proc{
@@ -50,8 +59,7 @@ describe PWS::Format::V0_9 do
       }.should raise_error(PWS::NoAccess)
     end
     
-    # This is why there are now integrity checks
-    it 'BUG: sometimes can read invalid files' do
+    it 'BUG: does not do integrity checks' do
       proc{
         PWS::Format::V0_9.read(@manipulated_file, password: @password)
       }.should_not raise_error

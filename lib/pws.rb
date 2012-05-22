@@ -51,8 +51,9 @@ class PWS
       pa %[There is already a password stored for #{key}. You need to remove it before creating a new one!], :red
       return false
     else
-      @data[key] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
-      if @data[key].empty?
+      @data[key] = {}
+      @data[key][:password] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
+      if @data[key][:password].empty?
         pa %[Cannot add an empty password!], :red
         return false
       else
@@ -66,10 +67,10 @@ class PWS
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = @options[:seconds])
-    if pw_plaintext = @data[key]
+    if password = @data[key] && @data[key][:password]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
-        Clipboard.copy pw_plaintext
+        Clipboard.copy password
         pa %[The password for #{key} is now available in your clipboard for #{seconds.to_i} second#{?s if seconds.to_i > 1}], :green
         begin
           sleep seconds.to_i
@@ -80,7 +81,7 @@ class PWS
         Clipboard.copy original_clipboard_content
         return true
       else
-        Clipboard.copy pw_plaintext
+        Clipboard.copy password
         pa %[The password for #{key} has been copied to your clipboard], :green
         return true
       end
@@ -174,17 +175,21 @@ class PWS
   # Checks if the file is accessible or create a new one
   # Tries to load and decrypt the password safe from the pwfile
   def read_safe(password = nil)
-    create_safe(password) unless File.file?(@filename)
+    if File.file?(@filename)
+      print %[Access password safe at #@filename | ]
+      @password = password || ask_for_password(%[master password])
+      encrypted_data = File.read(@filename)
+      
+      @data = Format.read(
+        encrypted_data,
+        legacy: @options[:legacy],
+        password: @password,
+      )
+    else
+      create_safe(password)
+      @data = {}
+    end 
     
-    print %[Access password safe at #@filename | ]
-    @password = password || ask_for_password(%[master password])
-    encrypted_data = File.read(@filename)
-    
-    @data = Format.read(
-      encrypted_data,
-      legacy: @options[:legacy],
-      password: @password,
-    )
     
     #rescue
      # fail NoAccess, %[Could not decrypt the password safe!]
@@ -197,20 +202,23 @@ class PWS
     if @options[:legacy]
       print %[TODO Legacy warning]
     end
-    encrypted_data = Format[VERSION].write(
+    encrypted_data = Format.write(
       @data,
+      version: VERSION,
       password: @password,
+      iterations: @options[:iterations],
     )
     File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
-  rescue
-    fail NoAccess, %[Could not encrypt and save the password safe!]
+  #rescue
+  #  fail NoAccess, %[Could not encrypt and save the password safe!]
   end
   
   def create_safe(password = nil)
     pa %[No password safe detected, creating one at #@filename], :blue, :bold
     @password = password || ask_for_password(%[please enter a new master password], :yellow, :bold)
     FileUtils.mkdir_p(File.dirname(@filename))
-    FileUtils.touch(@filename)
+    @data = {}
+    write_safe
     File.chmod(0600, @filename)
   end
   
@@ -218,14 +226,14 @@ class PWS
   def ask_for_password(prompt = 'new password', *colors)
     print Paint["#{prompt}:".capitalize, *colors] + " "
     system 'stty -echo' if $stdin.tty?     # no more terminal output
-    pw_plaintext = ($stdin.gets||'').chop  # gets without $stdin would mistakenly read_safe from ARGV
+    password = ($stdin.gets||'').chop      # gets without $stdin would mistakenly read_safe from ARGV
     system 'stty echo'  if $stdin.tty?     # restore terminal output
     puts "\e[999D\e[K\e[1A" if $stdin.tty? # re-use prompt line in terminal
     
-    pw_plaintext
+    password
   end
 end
 
-# Command line action in bin/pws
+# Command line action in pws/runner.rb
 
 # J-_-L
