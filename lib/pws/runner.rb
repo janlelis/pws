@@ -93,9 +93,10 @@ module PWS::Runner
 HELP
       else # redirect to safe
         if PWS.public_instance_methods(false).include?(action)
-          PWS.new(options).public_send(action, *arguments)
+          status = PWS.new(options).public_send(action, *arguments)
+          exit(status ? 0 : 2)
         else
-          pa "Unknown action: #{action}\nPlease see `pws --help` for a list of available commands!", :red
+          raise ArgumentError, "Unknown action: #{action}\nPlease see `pws --help` for a list of available commands!"
         end
       end
     rescue PWS::NoLegacyAccess
@@ -103,19 +104,26 @@ HELP
       pa 'The password safe you are trying to access migth be a version 0.9 password file', :red
       pa 'If this is the case, you will need to convert it to a version 1.0 password file by calling:', :red
       pa 'pws resave --in 0.9 --out 1.0', :red
-      exit(1)
+      exit(3)
     rescue PWS::NoAccess
       # pa $!.message.capitalize, :red, :bold
       pa "NO ACCESS", :red, :bold
-      exit(1)
+      exit(3)
     rescue ArgumentError
       pa $!.message.capitalize, :red
-      exit(1)
+      exit(4)
     rescue Interrupt
       system 'stty echo' if $stdin.tty? # ensure terminal's working
       pa "..canceled", :red
-      exit(1)
+      exit(5)
     end
+    
+    # exit status codes (not final, yet)
+    # 0 Success
+    # 2 Successfully run, but operation not successful
+    # 3 NoAccess
+    # 4 ArgumentError
+    # 5 Interrupt
   end
 end
 

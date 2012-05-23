@@ -36,20 +36,24 @@ class PWS
       else
         keys = @data.keys
       end
-      puts Paint["Entries", :underline] + %[ in ] + @filename
-      longest_key_size = keys.max_by(&:size).size
-      puts keys.sort.map{ |key|
-        "- #{
-          Paint[key, :bold]
-        } #{ 
-          Time.at(@data[key][:timestamp].to_i).strftime('%y-%m-%d') if @data[key][:timestamp].to_i != 0
-        }\n"
-      }.join
+      
+      if keys.empty?
+        pa %[No passwords found for pattern /#{pattern}/], :red
+      else
+        puts Paint["Entries", :underline] + %[ in ] + @filename
+        longest_key_size = keys.max_by(&:size).size
+        puts keys.sort.map{ |key|
+          "- #{
+            Paint[key, :bold]
+          } #{ 
+            Time.at(@data[key][:timestamp].to_i).strftime('%y-%m-%d') if @data[key][:timestamp].to_i != 0
+          }\n"
+        }.join
+      end
     end
     return true
   rescue RegexpError
-    pa %[Invalid regex given], :red
-    return false
+    raise ArgumentError, %[Invalid regex given]
   end
   aliases_for :show, :ls, :list, :status
   
@@ -62,8 +66,7 @@ class PWS
       @data[key] = {}
       @data[key][:password] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
       if @data[key][:password].empty?
-        pa %[Cannot set an empty password!], :red
-        return false
+        raise ArgumentError, %[Cannot set an empty password!]
       else
         @data[key][:timestamp] = Time.now.to_i
         write_safe
@@ -82,8 +85,7 @@ class PWS
     else
       @data[key][:password] = password || ask_for_password(%[please enter a new password for #{key}], :yellow)
       if @data[key][:password].empty?
-        pa %[Cannot set an empty password!], :red
-        return false
+        raise ArgumentError, %[Cannot set an empty password!]
       else
         @data[key][:timestamp] = Time.now.to_i
         write_safe
@@ -175,8 +177,7 @@ class PWS
       new_password = ask_for_password(%[please enter the new master password], :yellow, :bold)
       @password    = ask_for_password(%[please enter the new master password, again], :yellow, :bold)
       if new_password != @password
-        pa %[The passwords don't match!], :red
-        return false
+        raise ArgumentError, %[The passwords don't match!]
       end
     end
     write_safe

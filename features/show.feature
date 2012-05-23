@@ -35,6 +35,15 @@ Feature: Show
     And  I type "my_master_password"
     Then the output should contain "Invalid regex"
     
+  Scenario: Show the list and filter for regex, but no results
+    Given A safe exists with master password "my_master_password" and keys
+      | some-abc       | 123 |
+      | password-aDc!  | 345 |
+      | entries        | 678 |
+    When I run `pws show unknown` interactively
+    And  I type "my_master_password"
+    Then the output should contain "No passwords found"
+    
   Scenario: Also shows last change date for each entry
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password" and timestamp "42424242"
     When I run `pws show` interactively
