@@ -1,12 +1,21 @@
 require 'fileutils'
 
-def create_safe(master, key_hash = {})
+def create_safe(master, key_hash = {}, timestamp = nil)
   ENV["PWS_CHARPOOL"] = ENV["PWS_LENGTH"] = ENV["PWS_SECONDS"] = nil
   restore, $stdout = $stdout, StringIO.new # tmp silence $stdout
   pws = PWS.new(password: master, iterations: 5)
   key_hash.each{ |key, password|
     pws.add key, password
   }
+  
+  # only generating global timestamp for every entry
+  if timestamp
+    pws.instance_variable_get(:@data).each{ |_, entry|
+      entry[:timestamp] = timestamp
+    }
+    pws.resave
+  end
+  
   $stdout = restore
 end
 
@@ -21,6 +30,10 @@ end
 
 Given /^A safe exists with master password "([^"]*)" and a key "([^"]+)" with password "([^"]+)"$/ do |master_password, key, password|
   create_safe(master_password, key => password)
+end
+
+Given /^A safe exists with master password "([^"]*)" and a key "([^"]+)" with password "([^"]+)" and timestamp "([^"]+)"$/ do |master_password, key, password, timestamp|
+  create_safe(master_password, { key => password }, timestamp)
 end
 
 Given /^A safe exists with master password "([^"]*)" and keys$/ do |master_password, key_table|

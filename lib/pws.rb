@@ -37,7 +37,14 @@ class PWS
         keys = @data.keys
       end
       puts Paint["Entries", :underline] + %[ in ] + @filename
-      puts keys.sort.map{ |key| %[- #{key}\n] }.join
+      longest_key_size = keys.max_by(&:size).size
+      puts keys.sort.map{ |key|
+        "- #{
+          Paint[key, :bold]
+        } #{ 
+          Time.at(@data[key][:timestamp].to_i).strftime('%y-%m-%d') if @data[key][:timestamp].to_i != 0
+        }\n"
+      }.join
     end
     return true
   rescue RegexpError

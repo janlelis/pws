@@ -8,7 +8,7 @@ require 'openssl'
 class PWS
   module Format
     # PWS file format for versions ~> 1.0.0
-    # see at bottom block for a format description
+    # see at bottom block for a short format description
     module V1_0
       TEMPLATE = 'a64 a16 L> a64 a*'.freeze
       DEFAULT_ITERATIONS =        80_000
@@ -55,8 +55,8 @@ class PWS
             number_of_dummy_bytes,
             application_data.size,
             SecureRandom.random_bytes(number_of_dummy_bytes) +
-            array_to_data_string(ordered_data.map{ |_, e| e[:password] }) +
-            array_to_data_string(ordered_data.map{ |e, _| e }) +
+            array_to_data_string(ordered_data.map{ |_, e| e[:password].to_s }) +
+            array_to_data_string(ordered_data.map{ |k, _| k.to_s }) +
             array_to_data_string(ordered_data.map{ |_, e| e[:timestamp].to_i }) +
             SecureRandom.random_bytes(100_000 + SecureRandom.random_number(1_000_000))
           ].pack('L> L> a*')
