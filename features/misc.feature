@@ -28,3 +28,9 @@ Feature: Misc
     And  the output should contain "namespace"
     And  the output should contain "master"
   
+  Scenario: I am asking for the version
+    When I run `pws --version` interactively
+    And  the output should contain "pws"
+    And  the output should contain "J-_-L"
+    And  the output should contain "github"
+  

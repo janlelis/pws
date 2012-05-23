@@ -1,6 +1,23 @@
 require_relative '../lib/pws/runner'
+require 'fileutils'
 
 describe PWS::Runner do
+  describe '.run' do
+    before(:each){ @restore, $stdout = $stdout, StringIO.new }
+    after(:each){ $stdout = @restore }
+    
+    it 'creates a pws instance, passing the options (except for special options)' do
+      options = { some: 'options' }
+      pws_instance = PWS.new password: '123', filename: 'pws-test-dummy'
+      begin
+        PWS.should_receive(:new).with(options).and_return(pws_instance)
+        PWS::Runner.run(:show, [], options)
+      rescue SystemExit
+        FileUtils.rm 'pws-test-dummy'
+      end
+    end
+  end
+
   describe '.parse_cli_arguments' do
     it 'returns an array of this format: [Symbol, Array, Hash]' do
       ret = PWS::Runner.parse_cli_arguments(%w"-dev get redmine")
