@@ -244,7 +244,14 @@ class PWS
   
   def create_safe(password = nil)
     pa %[No password safe detected, creating one at #@filename], :blue, :bold
-    @password = password || ask_for_password(%[please enter a new master password], :yellow, :bold)
+    unless @password = password
+      new_password = ask_for_password(%[please enter the new master password], :yellow, :bold)
+      @password    = ask_for_password(%[please enter the new master password, again], :yellow, :bold)
+      if new_password != @password
+        raise ArgumentError, %[The passwords don't match!]
+      end
+    end
+    
     FileUtils.mkdir_p(File.dirname(@filename))
     @data = {}
     write_safe
