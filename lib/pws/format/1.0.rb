@@ -142,15 +142,15 @@ class PWS
         def array_to_data_string(array)
           array.map{ |e|
             e = e.to_s
-            s = e.size
+            s = e.bytesize
             raise(ArgumentError, 'Entry too long') if s > MAX_ENTRY_LENGTH
             [s, e].pack('N a*')
           }.join
         end
         
         def get_next_data_string(string, pos)
-          next_length = string[pos..pos+4].unpack('N')[0]
-          new_pos = pos + 4 + next_length
+          res_length = string[pos..pos+4].unpack('N')[0]
+          new_pos = pos + 4 + res_length
           res = string[pos+4...new_pos].unpack('a*')[0]
           
           [res, new_pos]
