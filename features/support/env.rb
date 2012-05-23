@@ -34,7 +34,7 @@ end
 # Hacks
 
 Before('@slow-hack') do
-  @aruba_io_wait_seconds = 3 # 0.5 would be ok... except for "output from", travis even needs more
+  @aruba_io_wait_seconds = 5 # 0.5 would be ok... except for "output from", travis even needs more
 end
 
 Before('@wait-11s') do

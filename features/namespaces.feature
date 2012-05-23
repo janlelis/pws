@@ -3,6 +3,7 @@ Feature: Namespaces and creating new safes
   As a user
   I want to use different safes
 
+  @slow-hack
   Scenario: Use a pws namespace, creating a new safe
     When I run `pws -work show` interactively
     And I type "some_new_master_password"

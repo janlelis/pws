@@ -3,6 +3,7 @@ Feature: Update
   As a user
   I want to update a password entry
 
+  @slow-hack
   Scenario: Set a new password for "github"
     Given A safe exists with master password "my_master_password" and a key "github" with password "old_password"
     When I run `pws update github` interactively
@@ -12,6 +13,7 @@ Feature: Update
     And  the output should contain "Please enter a new password for github:"
     And  the output should contain "The password for github has been updated"
     
+  @slow-hack
   Scenario: Set a new password for "github", already passing it as command line paramenter (not recommended)
     Given A safe exists with master password "my_master_password" and a key "github" with password "old_password"
     When I run `pws update github new_password` interactively
@@ -26,6 +28,7 @@ Feature: Update
     Then the output should contain "Master password:"
     And  the output should contain "There is no password stored for github, so you cannot update it!"
     
+  @slow-hack
   Scenario: Try to update the password for "github" (but it's empty)
     Given A safe exists with master password "my_master_password" and a key "github" with password "old_password"
     When I run `pws update github` interactively
