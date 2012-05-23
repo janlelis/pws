@@ -94,7 +94,7 @@ describe PWS::Format::V1_0 do
     it 'stores the iteration count in the password file' do
       iter = 500
       res = PWS::Format.write(@data, format: 1.0, password: @password, iterations: iter)
-      res.unpack('A91 L>')[1].should == 500
+      res.unpack('A91 N')[1].should == 500
     end
     
     it 'cannot create password files with more than 10_000_000 iterations' do
