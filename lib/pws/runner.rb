@@ -98,6 +98,11 @@ HELP
           pa "Unknown action: #{action}\nPlease see `pws --help` for a list of available commands!", :red
         end
       end
+    rescue PWS::NoLegacyAccess
+      pa "NO ACCESS", :red, :bold
+      pa 'The password safe you are trying to access migth be a version 0.9 password file', :red
+      pa 'If this is the case, you will need to convert it to a version 1.0 password file by calling:', :red
+      pa 'pws resave --in 0.9 --out 1.0', :red
     rescue PWS::NoAccess
       # pa $!.message.capitalize, :red, :bold
       pa "NO ACCESS", :red, :bold

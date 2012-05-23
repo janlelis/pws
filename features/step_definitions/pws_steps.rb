@@ -1,3 +1,5 @@
+require 'fileutils'
+
 def create_safe(master, key_hash = {})
   ENV["PWS_CHARPOOL"] = ENV["PWS_LENGTH"] = ENV["PWS_SECONDS"] = nil
   restore, $stdout = $stdout, StringIO.new # tmp silence $stdout
@@ -6,6 +8,11 @@ def create_safe(master, key_hash = {})
     pws.add key, password
   }
   $stdout = restore
+end
+
+# faking legacy version safe using a fixture, maybe do it properly sometime
+def create_09_safe
+  FileUtils.cp File.dirname(__FILE__) + '/../../spec/fixtures/0.9/correct', ENV['PWS']
 end
 
 Given /^A safe exists with master password "([^"]*)"$/ do |master_password|
@@ -18,6 +25,10 @@ end
 
 Given /^A safe exists with master password "([^"]*)" and keys$/ do |master_password, key_table|
   create_safe(master_password, key_table.rows_hash)
+end
+
+Given /^A "0.9" safe exists with master password "password" and a key "github" with password "123456"$/ do
+  create_09_safe
 end
 
 Given /^A clipboard content of "([^"]*)"$/ do |content|

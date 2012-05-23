@@ -11,6 +11,7 @@ require 'paint/pa'
 
 class PWS
   class NoAccess < StandardError; end
+  class NoLegacyAccess < NoAccess; end
   
   attr_reader :filename
   
@@ -155,6 +156,13 @@ class PWS
     return true
   end
   
+  # Just writes the safe, useful for converting with --in and --out
+  def resave
+    write_safe
+    pa %[The password file has been resaved], :green
+    return true
+  end
+  
   # Prevents accidental displaying, e.g. in irb
   def to_s
     %[#<password safe>]
@@ -169,7 +177,8 @@ class PWS
     @options[:seconds]  ||= ENV['PWS_SECONDS']  || 10
     @options[:length]   ||= ENV['PWS_LENGTH']   || 64
     @options[:charpool] ||= ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
-    @options[:legacy]   ||= !!ENV['PWS_LEGACY'] || false
+    @options[:in]       ||= ENV['PWS_FORMAT']   || VERSION
+    @options[:out]      ||= ENV['PWS_FORMAT']   || VERSION
   end
   
   # Checks if the file is accessible or create a new one
@@ -182,8 +191,8 @@ class PWS
       
       @data = Format.read(
         encrypted_data,
-        legacy: @options[:legacy],
         password: @password,
+        format: @options[:in],
       )
     else
       create_safe(password)
@@ -195,14 +204,11 @@ class PWS
   
   # Tries to encrypt and save the password safe into the pwfile
   def write_safe
-    if @options[:legacy]
-      print %[TODO Legacy warning]
-    end
     encrypted_data = Format.write(
       @data,
-      version: VERSION,
       password: @password,
-      iterations: @options[:iterations],
+      format: @options[:out],
+      iterations: @options[:iterations], # TODO
     )
     File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
   end

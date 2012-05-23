@@ -19,12 +19,12 @@ describe PWS::Format::V1_0 do
     it "calls V1_0.decrypt and V1_0.unmarshal" do
       PWS::Format::V1_0.should_receive(:decrypt)
       PWS::Format::V1_0.should_receive(:unmarshal)
-      PWS::Format.read(@correct, version: 1.0, password: @password)
+      PWS::Format.read(@correct, format: 1.0, password: @password)
     end
     
     it 'works correctly for a valid file' do
       proc{
-        @data = PWS::Format.read(@correct, version: 1.0, password: @password)
+        @data = PWS::Format.read(@correct, format: 1.0, password: @password)
       }.should_not raise_error
       @data.should be_a Hash
       @data['github'][:password].should == '123456'
@@ -32,7 +32,7 @@ describe PWS::Format::V1_0 do
     
     it 'works correctly for a valid file with many iterations' do
       proc{
-        @data = PWS::Format.read(@correct_1000000_iterations, version: 1.0, password: @password)
+        @data = PWS::Format.read(@correct_1000000_iterations, format: 1.0, password: @password)
       }.should_not raise_error
       @data.should be_a Hash
       @data['github'][:password].should == '123456'
@@ -40,37 +40,37 @@ describe PWS::Format::V1_0 do
     
     it 'cannot read 0.9 safes' do
       proc{
-        PWS::Format.read(@v0_9, version: 1.0, password: @password)
+        PWS::Format.read(@v0_9, format: 1.0, password: @password)
       }.should raise_error(PWS::NoAccess)
     end
     
     it 'cannot read files with wrong password' do
       proc{
-        PWS::Format.read(@correct, version: 1.0, password: '12345678')
+        PWS::Format.read(@correct, format: 1.0, password: '12345678')
       }.should raise_error(PWS::NoAccess)
     end
     
     it 'cannot read files with invalid iv' do
       proc{
-        PWS::Format.read(@invalid_iv, version: 1.0, password: @password)
+        PWS::Format.read(@invalid_iv, format: 1.0, password: @password)
       }.should raise_error(PWS::NoAccess)
     end
 
     it 'cannot read files with invalid salt' do
       proc{
-        PWS::Format.read(@invalid_salt, version: 1.0, password: @password)
+        PWS::Format.read(@invalid_salt, format: 1.0, password: @password)
       }.should raise_error(PWS::NoAccess)
     end
     
     it 'cannot read files with invalid hmac' do
       proc{
-        PWS::Format.read(@invalid_hmac, version: 1.0, password: @password)
+        PWS::Format.read(@invalid_hmac, format: 1.0, password: @password)
       }.should raise_error(PWS::NoAccess)
     end
     
     it 'cannot read files with invalid data' do
       proc{
-        PWS::Format.read(@invalid_data, version: 1.0, password: @password)
+        PWS::Format.read(@invalid_data, format: 1.0, password: @password)
       }.should raise_error(PWS::NoAccess)
     end
   end
@@ -88,76 +88,76 @@ describe PWS::Format::V1_0 do
     it "calls V1_0.marshal and V1_0.encrypt" do
       PWS::Format::V1_0.should_receive(:marshal)
       PWS::Format::V1_0.should_receive(:encrypt)
-      PWS::Format.write(@data, version: 1.0, password: @password)
+      PWS::Format.write(@data, format: 1.0, password: @password)
     end
     
     it 'stores the iteration count in the password file' do
       iter = 500
-      res = PWS::Format.write(@data, version: 1.0, password: @password, iterations: iter)
+      res = PWS::Format.write(@data, format: 1.0, password: @password, iterations: iter)
       res.unpack('A91 L>')[1].should == 500
     end
     
     it 'cannot create password files with more than 10_000_000 iterations' do
       proc{ 
-        PWS::Format.write(@data, version: 1.0, password: @password, iterations: 10_000_001)
+        PWS::Format.write(@data, format: 1.0, password: @password, iterations: 10_000_001)
       }.should raise_error(ArgumentError, 'Invalid iteration count given')
     end
     
     it 'cannot create password files with less than 2 iterations' do
       proc{ 
-        PWS::Format.write(@data, version: 1.0, password: @password, iterations: 1)
+        PWS::Format.write(@data, format: 1.0, password: @password, iterations: 1)
       }.should raise_error(ArgumentError, 'Invalid iteration count given')
     end
     
     it 'always uses different salt' do
-      res1  = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 5)
+      res1  = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 5)
       salt1 = res1.unpack('A11 A64')[1]
-      res2  = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 5)
+      res2  = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 5)
       salt2 = res2.unpack('A11 A64')[1]
       salt1.should_not == salt2
     end
     
     it 'always uses different iv' do
-      res1  = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 5)
+      res1  = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 5)
       iv1   = res1.unpack('A75 A16')[1]
-      res2  = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 5)
+      res2  = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 5)
       iv2   = res2.unpack('A75 A16')[1]
       iv1.should_not == iv2
     end
     
     it 'creates files with size > 200_000 bytes' do
       PWS::Format.write(
-        @data, version: 1.0, password: @password
+        @data, format: 1.0, password: @password
       ).unpack('A*')[0].size.should > 200_000
     end
     
     it 'keeps the same data when reading own output' do
-      res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 1000)
-      new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+      res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 1000)
+      new_data = PWS::Format.read(res,    format: 1.0, password: @password)
       @data.should == new_data
     end
     
     describe 'stress' do
       it 'no errors on 400 write-reads (1/3)' do
         300.times{
-          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
-          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    format: 1.0, password: @password)
           @data.should == new_data
         }
       end
       
       it 'no errors on 400 write-reads (2/3)' do
         300.times{
-          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
-          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    format: 1.0, password: @password)
           @data.should == new_data
         }
       end
       
       it 'no errors on 400 write-reads (3/3)' do
         300.times{
-          res      = PWS::Format.write(@data, version: 1.0, password: @password, iterations: 2)
-          new_data = PWS::Format.read(res,    version: 1.0, password: @password)
+          res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
+          new_data = PWS::Format.read(res,    format: 1.0, password: @password)
           @data.should == new_data
         }
       end
