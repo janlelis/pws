@@ -62,16 +62,37 @@ class PWS
       @data[key] = {}
       @data[key][:password] = password || ask_for_password(%[please enter a password for #{key}], :yellow)
       if @data[key][:password].empty?
-        pa %[Cannot add an empty password!], :red
+        pa %[Cannot set an empty password!], :red
         return false
       else
+        @data[key][:timestamp] = Time.now.to_i
         write_safe
         pa %[The password for #{key} has been added], :green
         return true
       end
     end
   end
-  aliases_for :add, :set, :store, :create, :[]=
+  aliases_for :add, :set, :store, :create
+  
+  # Updates a password entry, params: name, password (optional, opens prompt if not given)
+  def update(key, password = nil)
+    if !@data[key]
+      pa %[There is no password stored for #{key}, so you cannot update it!], :red
+      return false
+    else
+      @data[key][:password] = password || ask_for_password(%[please enter a new password for #{key}], :yellow)
+      if @data[key][:password].empty?
+        pa %[Cannot set an empty password!], :red
+        return false
+      else
+        @data[key][:timestamp] = Time.now.to_i
+        write_safe
+        pa %[The password for #{key} has been updated], :green
+        return true
+      end
+    end
+  end
+  aliases_for :update, :change
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = @options[:seconds])
