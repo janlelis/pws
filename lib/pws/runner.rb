@@ -17,8 +17,6 @@ module PWS::Runner
           # ignore
         when /^--(help|version)$/
           return [$1.to_sym, [], {}]
-        when /^--(legacy)$/
-          options[:legacy] = true
         when /^--/
           # parse option in next iteration
         when /^-([^-].*)$/
@@ -93,7 +91,9 @@ module PWS::Runner
 HELP
       else # redirect to safe
         if PWS.public_instance_methods(false).include?(action)
-          status = PWS.new(options).public_send(action, *arguments)
+          status = PWS.new(options).public_send(action, *arguments.map{ |a|
+            a.unpack('a*')[0] # ignore encoding
+          })
           exit(status ? 0 : 2)
         else
           raise ArgumentError, "Unknown action: #{action}\nPlease see `pws --help` for a list of available commands!"

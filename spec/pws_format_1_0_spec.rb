@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require_relative '../lib/pws/format/0.9'
 require_relative '../lib/pws/format/1.0'
 
@@ -78,9 +80,9 @@ describe PWS::Format::V1_0 do
   describe '.write' do
     before(:all) do
       @data = {
-        'github'   => { password: '123456', timestamp: Time.now.to_i },
-        'codegolf' => { password: '982649238642983648237468823', timestamp: Time.now.to_i },
-        'twitter'  => { password: 'twitter', timestamp: Time.now.to_i },
+        'github' => { password: '123456', timestamp: Time.now.to_i },
+        '⌨'.unpack('a*')[0] => { password: '⌨'.unpack('a*')[0], timestamp: Time.now.to_i },
+        'twittör'.unpack('a*')[0]  => { password: 'twittör'.unpack('a*')[0], timestamp: Time.now.to_i },
       }
       @password = 'password'
     end
@@ -132,13 +134,13 @@ describe PWS::Format::V1_0 do
     end
     
     it 'keeps the same data when reading own output' do
-      res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 1000)
+      res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 10_0)
       new_data = PWS::Format.read(res,    format: 1.0, password: @password)
       @data.should == new_data
     end
     
     describe 'stress' do
-      it 'no errors on 400 write-reads (1/3)' do
+      it 'no errors on 400 write-reads (1/2)' do
         300.times{
           res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
           new_data = PWS::Format.read(res,    format: 1.0, password: @password)
@@ -146,7 +148,7 @@ describe PWS::Format::V1_0 do
         }
       end
       
-      it 'no errors on 400 write-reads (2/3)' do
+      it 'no errors on 400 write-reads (2/2)' do
         300.times{
           res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
           new_data = PWS::Format.read(res,    format: 1.0, password: @password)
@@ -154,11 +156,16 @@ describe PWS::Format::V1_0 do
         }
       end
       
-      it 'no errors on 400 write-reads (3/3)' do
+      it 'no errors on 400 write-reads, getting more and more data' do
+        data = @data.dup
         300.times{
-          res      = PWS::Format.write(@data, format: 1.0, password: @password, iterations: 2)
+          data[SecureRandom.random_bytes(SecureRandom.random_number(1000))] = {
+            password: SecureRandom.random_bytes(SecureRandom.random_number(1000)),
+            timestamp: SecureRandom.random_number(Time.now.to_i),
+          }
+          res      = PWS::Format.write(data, format: 1.0, password: @password, iterations: 2)
           new_data = PWS::Format.read(res,    format: 1.0, password: @password)
-          @data.should == new_data
+          data.should == new_data
         }
       end
     end
