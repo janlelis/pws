@@ -3,6 +3,7 @@ Feature: Create
   As a user
   I want to create a new safe
 
+  @slow-hack
   Scenario: Trying to call a pws task (except help or version), but safe does not exist, yet
     When I run `pws` interactively
     And I type "some_new_master_password"
