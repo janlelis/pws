@@ -13,15 +13,6 @@ Feature: Namespaces and creating new safes
     And  the output should contain "Please enter the new master password, again:"
     And  the output should contain "There aren't any passwords stored"
     
-  Scenario: Creating a new safe fails, if password confirmation is wrong 
-    When I run `pws show` interactively
-    And I type "some_new_master_password"
-    And I type "some_new_master_password_wrong"
-    Then the output should match /No password safe detected, creating one at.*pws.*/
-    And  the output should contain "Please enter the new master password:"
-    And  the output should contain "Please enter the new master password, again:"
-    And  the output should contain "don't match"
-    
   Scenario: Only passing "-" operates on usual main namespace 
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws - show` interactively
