@@ -37,13 +37,13 @@ Feature: --in and --out options
     Given A "0.9" safe exists with master password "password" and a key "github" with password "123456"
     When I run `pws resave --in 0.9 --out 1.0` interactively
     And  I type "password"
-    Then the output from "pws resave --in 0.9 --out 1.0" should contain "Master password:"
-    Then the output from "pws resave --in 0.9 --out 1.0" should contain "resaved"
+    Then the output should contain "Master password:"
+    Then the output should contain "resaved"
     When I run `pws` interactively
     And  I type "password"
-    Then the output from "pws" should contain "Master password:"
-    Then the output from "pws" should contain "Entries"
-    Then the output from "pws" should contain "github"
+    Then the output should contain "Master password:"
+    Then the output should contain "Entries"
+    Then the output should contain "github"
   
   Scenario: Trying to convert to 0.9, but --out 0.9 is not supported
     Given A "0.9" safe exists with master password "password" and a key "github" with password "123456"

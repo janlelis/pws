@@ -60,11 +60,11 @@ Then /^the clipboard should match ([^\/].+)$/ do |expected|
   assert_matching_output(expected, Clipboard.paste) 
 end
 
-Then /^the output should contain the current date$/ do |cmd|
+Then /^the output should contain the current date$/ do
   assert_partial_output(Time.now.strftime('%y-%m-%d'), all_output)
 end
 
-Then /^the output should not contain the current date$/ do |cmd|
+Then /^the output should not contain the current date$/ do
   assert_no_partial_output(Time.now.strftime('%y-%m-%d'), all_output)
 end
 

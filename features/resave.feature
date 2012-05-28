@@ -11,27 +11,27 @@ Feature: Resave
       | entries   | 678 |
     When I run `pws resave` interactively
     And  I type "my_master_password"
-    Then the output from "pws resave" should contain "resaved"
+    Then the output should contain "resaved"
     When I run `pws` interactively
     And  I type "my_master_password"
-    And  the output from "pws" should contain "some"
-    And  the output from "pws" should contain "password"
-    And  the output from "pws" should contain "entries"
+    And  the output should contain "some"
+    And  the output should contain "password"
+    And  the output should contain "entries"
     
   @slow-hack
   Scenario: Useful for converting when used together with --in and --out options
     Given A "0.9" safe exists with master password "password" and a key "github" with password "123456"
     When I run `pws show` interactively
     And  I type "password"
-    Then the output from "pws show" should contain "Master password:"
-    Then the output from "pws show" should contain "NO ACCESS"
-    Then the output from "pws show" should contain "convert"
+    Then the output should contain "Master password:"
+    Then the output should contain "NO ACCESS"
+    Then the output should contain "convert"
     When I run `pws resave --in 0.9 --out 1.0` interactively
     And  I type "password"
-    Then the output from "pws resave --in 0.9 --out 1.0" should contain "Master password:"
-    Then the output from "pws resave --in 0.9 --out 1.0" should contain "resaved"
+    Then the output should contain "Master password:"
+    Then the output should contain "resaved"
     When I run `pws` interactively
     And  I type "password"
-    Then the output from "pws" should contain "Master password:"
-    Then the output from "pws" should contain "Entries"
-    Then the output from "pws" should contain "github"
+    Then the output should contain "Master password:"
+    Then the output should contain "Entries"
+    Then the output should contain "github"

@@ -16,8 +16,8 @@ Feature: Master
     And  the output should contain "The master password has been changed"
     When I run `pws` interactively
     And  I type "my_master_password"
-    And  the output from "pws" should contain "Master password"
-    And  the output from "pws" should contain "NO ACCESS"
+    And  the output should contain "Master password"
+    And  the output should contain "NO ACCESS"
   
   Scenario: Try to change the master password (but password confirmation is wrong)
     Given A safe exists with master password "my_master_password"
@@ -30,7 +30,6 @@ Feature: Master
     And  the output should contain "again"
     And  the output should contain "don't match"
   
-  @slow-hack
   Scenario: Change the master password, already passing it as command line parameter (not recommended)
     Given A safe exists with master password "my_master_password"
     When I run `pws master my_new_master_password` interactively
@@ -49,8 +48,8 @@ Feature: Master
     And  the output should contain "The master password has been changed"
     When I run `pws` interactively
     And  I type ""
-    Then the output from "pws" should contain "Master password:"
-    And  the output from "pws" should contain "There aren't any passwords stored"
+    Then the output should contain "Master password:"
+    And  the output should contain "There aren't any passwords stored"
     
   Scenario: Try to change the master password (but enter the old one wrong)
     Given A safe exists with master password "my_master_password"

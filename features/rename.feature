@@ -3,7 +3,7 @@ Feature: Rename
   As a user
   I want to rename passwords in my password safe
 
-  @slow-hack
+  @very-slow-hack
   Scenario: Rename the password entry "github" to "gh"
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws rename github gh` interactively
@@ -12,9 +12,9 @@ Feature: Rename
     And  the output should contain "The password entry github has been renamed to gh"
     When I run `pws show` interactively
     And  I type "my_master_password"
-    Then the output from "pws show" should contain "Master password:"
-    And  the output from "pws show" should contain "Entries"
-    And  the output from "pws show" should contain "gh"
+    Then the output should contain "Master password:"
+    And  the output should contain "Entries"
+    And  the output should contain "gh"
     And  the output from "pws show" should not contain "github"
 
   Scenario: Try to rename the password entry "github" to "gh" (but github does not exist)
