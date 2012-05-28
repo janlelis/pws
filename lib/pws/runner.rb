@@ -52,7 +52,7 @@ module PWS::Runner
   pws allows you to manage passwords in encryted password files (safes). It
   operates on the file specified in the environment variable PWS or on "~/.pws".
   Using a single dash, you can set a namespace that will be appended to the
-  filename, e.g. `pws -work show` will use "~/.pws-work".
+  filename, e.g. `pws -work show` will operate on "~/.pws-work".
   
   #{Paint["Available Actions", :underline]}
   

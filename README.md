@@ -16,8 +16,10 @@ You can install pws with
 
 Run `$ pws --help` for usage information.
 
+On linux, please make sure you've got `xclip` or `xsel` installed for full clipboard support.
 
-1.0 / Updating from 0.9
+
+Updating from 0.9
 ---
 You can try out the newest version with:
 `$ gem install pws --pre`
@@ -33,6 +35,7 @@ Trust the code by reading the source! It's originally based on [this tutorial](h
 
 Contributions by
 ---
+* [namelessjon](https://github.com/namelessjon)
 * [brianewing](https://github.com/brianewing/)
 * [dquimper](https://github.com/dquimper/)
 * [grapz](https://github.com/grapz/)

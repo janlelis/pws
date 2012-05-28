@@ -4,7 +4,7 @@ name = 'pws'
 require File.dirname(__FILE__) + "/lib/#{name}/version"
  
 Gem::Specification.new do |s|
-  s.required_ruby_version = '>= 1.9'
+  s.required_ruby_version = '>= 1.9.2'
   s.name        = name
   s.version     = PWS::VERSION
   s.authors     = ["Jan Lelis"]
