@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pws (1.0.0.pre.1)
+    pws (1.0.0)
       clipboard (~> 1.0.1)
       paint (>= 0.8.4)
       zucker (>= 12.1)

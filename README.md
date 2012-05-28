@@ -2,7 +2,6 @@ pws [![Build status](http://travis-ci.org/janlelis/pws.png)](http://travis-ci.or
 ===
 pws is a command-line password safe/manager written in Ruby.
 
-*ATTENTION* Refactoring in progress / The latest stable version is 0.9.2
 
 Usage
 ---
@@ -16,14 +15,11 @@ You can install pws with
 
 Run `$ pws --help` for usage information.
 
-On linux, please make sure you've got `xclip` or `xsel` installed for full clipboard support.
+On linux, please make sure you've got `xclip` or `xsel` installed (clipboard).
 
 
 Updating from 0.9
 ---
-You can try out the newest version with:
-`$ gem install pws --pre`
-
 The 0.9 password files are not compatible with that version, however, you can convert your safe with:
 `$ pws resave --in 0.9 --out 1.0`
 
