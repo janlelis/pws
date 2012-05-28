@@ -11,7 +11,7 @@ class PWS
     # see at bottom block for a short format description
     module V1_0
       TEMPLATE = 'a64 a16 N a64 a*'.freeze
-      DEFAULT_ITERATIONS =        80_000
+      DEFAULT_ITERATIONS =        75_000
       MAX_ITERATIONS     =    10_000_000
       MAX_ENTRY_LENGTH   = 4_294_967_295 # N
     

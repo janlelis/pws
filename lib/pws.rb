@@ -94,7 +94,7 @@ class PWS
       end
     end
   end
-  aliases_for :update, :change
+  alias :'update-add' :update
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = @options[:seconds])
@@ -191,6 +191,7 @@ class PWS
     pa %[The password file has been resaved], :green
     return true
   end
+  alias_for :resave, :convert
   
   # Prevents accidental displaying, e.g. in irb
   def to_s
@@ -202,12 +203,13 @@ class PWS
 
   def collect_options(options = {})
     @options = options
-    @options[:filename] ||= ENV["PWS"]          || '~/.pws'
-    @options[:seconds]  ||= ENV['PWS_SECONDS']  || 10
-    @options[:length]   ||= ENV['PWS_LENGTH']   || 64
-    @options[:charpool] ||= ENV['PWS_CHARPOOL'] || (33..126).map(&:chr).join
-    @options[:in]       ||= ENV['PWS_FORMAT']   || VERSION
-    @options[:out]      ||= ENV['PWS_FORMAT']   || VERSION
+    @options[:filename]   ||= ENV["PWS"]            || '~/.pws'
+    @options[:seconds]    ||= ENV['PWS_SECONDS']    || 10
+    @options[:length]     ||= ENV['PWS_LENGTH']     || 64
+    @options[:charpool]   ||= ENV['PWS_CHARPOOL']   || (33..126).map(&:chr).join
+    @options[:in]         ||= ENV['PWS_FORMAT']     || VERSION
+    @options[:out]        ||= ENV['PWS_FORMAT']     || VERSION
+    @options[:iterations] ||= ENV['PWS_ITERATIONS'] || 75_000
   end
   
   # Checks if the file is accessible or create a new one
@@ -237,7 +239,7 @@ class PWS
       @data,
       password: @password,
       format: @options[:out],
-      iterations: @options[:iterations], # TODO
+      iterations: @options[:iterations],
     )
     File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
   end

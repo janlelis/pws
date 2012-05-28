@@ -1,10 +1,11 @@
 == 1.0.0
 * New file format, the old one needs to be  converted by calling `pws resave --in 0.9 --out 1.0`
-* Bruteforce protection by using pbkdf2, you can choose the number of iterations (default: 100_000)
+* Bruteforce protection by using pbkdf2, you can choose the number of iterations (default: 75_000)
 * Password files have now better integrity checks
 * Store and display updated_at timestamp for entries
 * Don't rely on Ruby marshalling
-* New action: update (updates an entry, cannot be used to create one)
+* New actions: update (updates an entry, cannot be used to create one), update-gen
+* New action: resave (useful for converting safes)
 * Better exit statuses
 * Misc tweaks (password confirmation when creating, etc)
 
