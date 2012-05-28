@@ -3,7 +3,6 @@ Feature: Update
   As a user
   I want to update a password entry
 
-  @slow-hack
   Scenario: Set a new password for "github"
     Given A safe exists with master password "my_master_password" and a key "github" with password "old_password"
     When I run `pws update github` interactively

@@ -42,5 +42,5 @@ Before('@very-slow-hack') do
 end
 
 Before('@wait-11s') do
-  @aruba_timeout_seconds = 12
+  @aruba_timeout_seconds = 14
 end

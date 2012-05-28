@@ -130,16 +130,22 @@ class PWS
         length    = @options[:length],
         charpool  = @options[:charpool]
     )
-    charpool_size = charpool.size
-    new_pw = (1..length.to_i).map{
-      charpool[SecureRandom.random_number(charpool_size)]
-    }.join
-    
-    if add(key, new_pw) 
-      get(key, seconds)
-    end
+    get(key, seconds) if add(key, generator(length, charpool))
   end
   alias_for :generate, :gen
+  
+  # Updates a password entry with a freshly generated random password
+  def update_generate(
+        key,
+        seconds   = @options[:seconds],
+        length    = @options[:length],
+        charpool  = @options[:charpool]
+    )
+    get(key, seconds) if update(key, generator(length, charpool))
+  end
+  alias :'update-generate' :update_generate
+  alias :'update_gen'      :update_generate
+  alias :'update-gen'      :update_generate
   
   # Removes a specific password entry
   def remove(key)
@@ -270,8 +276,16 @@ class PWS
     
     password
   end
+  
+  # Generate a random password, maybe put in its own class sometime
+  def generator(length, charpool)
+    charpool_size = charpool.size
+    (1..length.to_i).map{
+      charpool[SecureRandom.random_number(charpool_size)]
+    }.join
+  end
 end
 
-# Command line action in pws/runner.rb
+# Command line behavior in pws/runner.rb
 
 # J-_-L
