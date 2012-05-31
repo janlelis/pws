@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pws (1.0.0)
+    pws (1.0.1)
       clipboard (~> 1.0.1)
       paint (>= 0.8.4)
       pbkdf2
