@@ -12,12 +12,15 @@ ENV['PATH'] = "#{File.expand_path(File.dirname(__FILE__) + '/../../bin')}#{File:
 # Hooks
 
 BEGIN{
-  $original_pws_file = ENV["PWS"]
+  $original_pws_file   = ENV["PWS"]
+  $original_iterations = ENV["PWS_ITERATIONS"]
+  ENV["PWS_ITERATIONS"] = "2"
 }
 
 END{
   Clipboard.clear
   ENV["PWS"] = $original_pws_file
+  ENV["PWS_ITERATIONS"] = $original_iterations
   FileUtils.rm Dir['pws-test-*']
 }
 
