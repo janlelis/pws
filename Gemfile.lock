@@ -4,6 +4,7 @@ PATH
     pws (1.0.0)
       clipboard (~> 1.0.1)
       paint (>= 0.8.4)
+      pbkdf2
       zucker (>= 12.1)
 
 GEM
@@ -73,6 +74,7 @@ GEM
     methodfinder (1.2.5)
     ori (0.1.0)
     paint (0.8.4)
+    pbkdf2 (0.1.0)
     rake (0.9.2.2)
     ripl (0.6.4)
       bond (~> 0.4.0)

@@ -4,6 +4,7 @@ require_relative '../format'
 require 'securerandom'
 require 'digest/hmac'
 require 'openssl'
+require 'pbkdf2'
 
 class PWS
   module Format
@@ -121,9 +122,15 @@ class PWS
           ]
         end
         
-        private
+        # support
         
-        def kdf(password, salt, iterations)
+        def hmac(key, *strings)
+          Digest::HMAC.new(key, Digest::SHA512).update(
+            strings.map(&:to_s).join
+          ).digest
+        end
+        
+        def kdf_openssl(password, salt, iterations)
           OpenSSL::PKCS5::pbkdf2_hmac(
             password,
             salt,
@@ -133,11 +140,26 @@ class PWS
           )
         end
         
-        def hmac(key, *strings)
-          Digest::HMAC.new(key, Digest::SHA512).update(
-            strings.map(&:to_s).join
-          ).digest
+        def kdf_ruby(password, salt, iterations)
+          PBKDF2.new(
+            password: password,
+            salt: salt,
+            iterations: iterations,
+            key_length: 512,
+            hash_function: OpenSSL::Digest::SHA512,
+          ).bin_string
         end
+        
+        # see gh#7
+        begin
+          OpenSSL::PKCS5::pbkdf2_hmac("","",2,512,OpenSSL::Digest::SHA512.new)
+        rescue NotImplementedError
+          alias kdf kdf_ruby
+        else
+          alias kdf kdf_openssl
+        end
+        
+        private
         
         def array_to_data_string(array)
           array.map{ |e|

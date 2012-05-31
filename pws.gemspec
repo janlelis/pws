@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'clipboard', '~> 1.0.1'
   s.add_dependency 'zucker',    '>= 12.1'
   s.add_dependency 'paint',     '>= 0.8.4'
+  s.add_dependency 'pbkdf2'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'aruba'
   s.add_development_dependency 'cucumber'

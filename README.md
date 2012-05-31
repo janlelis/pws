@@ -15,8 +15,9 @@ You can install pws with
 
 Run `$ pws --help` for usage information.
 
-On linux, please make sure you've got `xclip` or `xsel` installed (clipboard).
+On Linux, please make sure you've got `xclip` or `xsel` installed (clipboard).
 
+On MacOS, the KDF might be generated pretty slow. You can work around this issue by using less iterations (see help) or [solving this problem](https://github.com/janlelis/pws/issues/7).
 
 Updating from 0.9
 ---

@@ -170,4 +170,14 @@ describe PWS::Format::V1_0 do
       end
     end
   end
+  
+  describe 'misc' do
+    it 'generates the same kdf, no matter which implementation' do
+      password = "12345678"
+      salt     = SecureRandom.random_bytes(64)
+      iterations = SecureRandom.random_number(10_000)
+      PWS::Format::V1_0.kdf_ruby(password, salt, iterations).should ==
+        PWS::Format::V1_0.kdf_openssl(password, salt, iterations)
+    end
+  end
 end
