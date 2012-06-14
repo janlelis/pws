@@ -21,6 +21,7 @@ pkg
 ## PROJECT::SPECIFIC
 pws-test*
 TODO
+Gemfile.lock
 
 ## rvm
 .rvmrc
