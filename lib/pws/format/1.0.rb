@@ -155,6 +155,7 @@ class PWS
           OpenSSL::PKCS5::pbkdf2_hmac("","",2,512,OpenSSL::Digest::SHA512.new)
         rescue NotImplementedError
           alias kdf kdf_ruby
+          warn "[pws slow] https://github.com/janlelis/pws#openssl-10"
         else
           alias kdf kdf_openssl
         end

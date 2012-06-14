@@ -17,9 +17,12 @@ Run `$ pws --help` for usage information.
 
 On Linux, please make sure you've got `xclip` or `xsel` installed (clipboard).
 
-On MacOS, the KDF might be generated pretty slow. You can work around this issue by using less iterations (see help) or [solving this problem](https://github.com/janlelis/pws/issues/7).
+OpenSSL 1.0
+---
+You should use a Ruby built with bindings to an openssl version >= 1.0. If not, pws will fall back to a Ruby-only version of the PBKDF2 function. If using openssl 1.0 is not possible for you, you can work around the issue by using the `--iterations` option with a value < 75\_000 (see help). If you have problems using openssl 1.0 with your Ruby, please look for a solution in [this github issue](https://github.com/janlelis/pws/issues/7).
 
-Updating from 0.9
+
+Updating from pws 0.9
 ---
 The 0.9 password files are not compatible with that version, however, you can convert your safe with:
 `$ pws resave --in 0.9 --out 1.0`
@@ -30,13 +33,13 @@ Reading the source
 Trust the code by reading the source! It's originally based on [this tutorial](http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby). You might want to start reading in the [0.9.2 tag](https://github.com/janlelis/pws/tree/0.9.2), because it's got less features and therefore is less code.
 
 
-Contributions by
+Contributors
 ---
 * [namelessjon](https://github.com/namelessjon)
 * [brianewing](https://github.com/brianewing/)
 * [dquimper](https://github.com/dquimper/)
 * [grapz](https://github.com/grapz/)
-* Cucumber specs loosely based on [the ones](https://github.com/thecatwasnot/passwordsafe/blob/master/features/) by [thecatwasnot](https://github.com/thecatwasnot/)
+* [thecatwasnot](https://github.com/thecatwasnot/) (cucumber specs loosely based on [these](https://github.com/thecatwasnot/passwordsafe/blob/master/features/))
 
 
 Copyright
