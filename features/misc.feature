@@ -36,3 +36,10 @@ Feature: Misc
     And  the output should contain "J-_-L"
     And  the output should contain "github"
   
+  Scenario: I want to use a .pws file in the current directory
+    When I run `pws --cwd ls` interactively
+    And  I type "123"
+    And  I type "456"
+    Then the output should contain the current path
+    And  the output should contain ".pws"
+    And  the output should contain "The passwords don't match!"

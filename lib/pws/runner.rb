@@ -17,6 +17,8 @@ module PWS::Runner
           # ignore
         when /^--(help|version)$/
           return [$1.to_sym, [], {}]
+        when /^--(cwd)/ # special single options
+          options[$1.to_sym] = true
         when /^--/
           # parse option in next iteration
         when /^-([^-].*)$/
@@ -110,6 +112,10 @@ module PWS::Runner
   
   #{Paint['--filename', :bold]}
   Path to the password safe to use. Overrides usual path and any namespaces.
+  
+  #{Paint['--cwd', :bold]}
+  Use a .pws file in the current directory instead of the one specified in
+  ENV['PWS'] or with --filename.
   
   #{Paint['--iterations', :bold]}
   Sets the number of sha iterations used to transform your password into the

@@ -76,6 +76,10 @@ Then /^the output from "([^"]*)" should not contain the current date$/ do |cmd|
   assert_no_partial_output(Time.now.strftime('%y-%m-%d'), output_from(cmd))
 end
 
+Then /^the output should contain the current path$/ do
+  assert_partial_output(FileUtils.pwd, all_output)
+end
+
 When /^I set env variable "(\w+)" to "([^"]*)"$/ do |var, value|
   ENV[var] = value
 end

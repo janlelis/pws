@@ -20,7 +20,7 @@ class PWS
   # You can pass the master password as third parameter (not recommended)
   def initialize(options)
     collect_options(options)
-    @filename = File.expand_path(@options[:filename])
+    @filename = @options[:cwd] ? File.join(FileUtils.pwd, '.pws') : File.expand_path(@options[:filename])
     @filename << '-' << @options[:namespace] if @options[:namespace]
     
     read_safe(options[:password])

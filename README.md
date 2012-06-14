@@ -17,9 +17,15 @@ Run `$ pws --help` for usage information.
 
 On Linux, please make sure you've got `xclip` or `xsel` installed (clipboard).
 
+
 OpenSSL 1.0
 ---
 You should use a Ruby built with bindings to an openssl version >= 1.0. If not, pws will fall back to a Ruby-only version of the PBKDF2 function. If using openssl 1.0 is not possible for you, you can work around the issue by using the `--iterations` option with a value < 75\_000 (see help). If you have problems using openssl 1.0 with your Ruby, please look for a solution in [this github issue](https://github.com/janlelis/pws/issues/7).
+
+
+Using a .pws file in the current working directory
+---
+Besides using the `--filename path/to/safe` option, you can shortly call `pws --cwd` for using a `.pws` file in the current directory.
 
 
 Updating from pws 0.9
