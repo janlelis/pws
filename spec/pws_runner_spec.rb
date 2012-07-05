@@ -69,12 +69,16 @@ describe PWS::Runner do
       end
       
       describe 'special options' do
-        it 'behaves differently for the special options help and version' do
+        it 'behaves differently for the special single options' do
           ret = PWS::Runner.parse_cli_arguments(%w"get --seconds 3 --help get -dev redmine")
           ret[0].should == :help
           
           ret = PWS::Runner.parse_cli_arguments(%w"--version")
           ret[0].should == :version
+
+          ret = PWS::Runner.parse_cli_arguments(%w"--cwd master")
+          ret[2][:cwd].should be_true
+          ret[0].should == :master
         end
       end
     end

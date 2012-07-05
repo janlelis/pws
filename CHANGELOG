@@ -1,3 +1,6 @@
+== 1.0.3
+* Fix single options (like --cwd) to really be single
+
 == 1.0.2
 * Output a small warning when using Ruby fallback (pbkdf2 is only implemented in openssl >= 1.0)
 * New --cwd option for easy access to .pws files in the current directory

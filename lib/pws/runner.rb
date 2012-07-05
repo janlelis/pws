@@ -1,6 +1,10 @@
 require_relative '../pws'
 
 module PWS::Runner
+  SINGLE_OPTIONS = Regexp.union *%w[
+    cwd
+  ].freeze
+
   class << self
     # some simple option parsing
     # returns action, arguments, options
@@ -17,15 +21,15 @@ module PWS::Runner
           # ignore
         when /^--(help|version)$/
           return [$1.to_sym, [], {}]
-        when /^--(cwd)/ # special single options
+        when /^--(#{SINGLE_OPTIONS})/ # special single options
           options[$1.to_sym] = true
         when /^--/
           # parse option in next iteration
         when /^-([^-].*)$/
           options[:namespace] = $1
         else
-          if prev_arg =~ /^--(.+)$/
-            options[$1.to_sym] = arg
+          if prev_arg =~ /^--(.+)$/ && SINGLE_OPTIONS !~ opt = $1
+            options[opt.to_sym] = arg
           elsif !action
             action = arg.to_sym
           else
