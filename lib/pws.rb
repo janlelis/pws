@@ -4,8 +4,10 @@ require_relative 'pws/encryptor'
 require_relative 'pws/format'
 
 require 'fileutils'
-require 'clipboard'
 require 'securerandom'
+require 'abbrev'
+
+require 'clipboard'
 require 'zucker/alias_for'
 require 'paint/pa'
 
@@ -98,11 +100,12 @@ class PWS
   
   # Gets the password entry and copies it to the clipboard. The second parameter is the time in seconds it stays there
   def get(key, seconds = @options[:seconds])
-    if password = @data[key] && @data[key][:password]
+    if real_key = @abbrevs[key]
+      password = @data[real_key][:password]
       if seconds && seconds.to_i > 0
         original_clipboard_content = Clipboard.paste
         Clipboard.copy password
-        pa %[The password for #{key} is now available in your clipboard for #{seconds.to_i} second#{?s if seconds.to_i > 1}], :green
+        pa %[The password for #{real_key} is now available in your clipboard for #{seconds.to_i} second#{?s if seconds.to_i > 1}], :green
         begin
           sleep seconds.to_i
         rescue Interrupt
@@ -113,7 +116,7 @@ class PWS
         return true
       else
         Clipboard.copy password
-        pa %[The password for #{key} has been copied to your clipboard], :green
+        pa %[The password for #{real_key} has been copied to your clipboard], :green
         return true
       end
     else
@@ -231,6 +234,7 @@ class PWS
         password: @password,
         format: @options[:in],
       )
+      @abbrevs = @data.keys.abbrev
     else
       create_safe(password)
     end 

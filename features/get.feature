@@ -57,5 +57,17 @@ Feature: Get
     And  I type "my_master_password_wrong"
     Then the output should contain "Master password:"
     And  the output should contain "NO ACCESS"
+
+  Scenario: Get the password for "gihub" using an abbrev shortcut
+    Given A safe exists with master password "my_master_password" and keys
+      | github    | 123 |
+      | google    | 345 |
+      | gitorious | 678 |
+    When I run `pws get gith 0` interactively
+    And  I type "my_master_password"
+    Then the output should contain "Master password:"
+    And  the output should contain "The password for github has been copied to your clipboard"
+    And  the clipboard should contain "123"
+
     
   

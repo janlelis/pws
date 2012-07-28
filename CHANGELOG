@@ -1,3 +1,6 @@
+== 1.0.4
+* You can now get your passwords using as short shortcuts as possible powered by stdlib's abbrev library
+
 == 1.0.3
 * Fix single options (like --cwd) to really be single
 
