@@ -234,7 +234,7 @@ class PWS
         password: @password,
         format: @options[:in],
       )
-      @abbrevs = @data.keys.abbrev
+      update_abbrevs!
     else
       create_safe(password)
     end 
@@ -252,6 +252,7 @@ class PWS
       iterations: @options[:iterations],
     )
     File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
+    update_abbrevs!
   end
   
   def create_safe(password = nil)
@@ -287,6 +288,10 @@ class PWS
     (1..length.to_i).map{
       charpool[SecureRandom.random_number(charpool_size)]
     }.join
+  end
+
+  def update_abbrevs!
+     @abbrevs = @data.keys.abbrev
   end
 end
 
