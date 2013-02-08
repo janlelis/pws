@@ -1,4 +1,4 @@
-pws [![Build status](http://travis-ci.org/janlelis/pws.png)](http://travis-ci.org/janlelis/pws)
+pws [![[travis]](https://travis-ci.org/janlelis/pws.png)](https://travis-ci.org/janlelis/pws)
 ===
 pws is a command-line password safe/manager written in Ruby using [aes-256-cbc](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [pbkdf2](http://en.wikipedia.org/wiki/PBKDF2).
 
@@ -47,4 +47,4 @@ Contributors
 
 J-\_-L
 ---
-© 2010-2012 Jan Lelis, MIT license
+© 2010-2013 Jan Lelis, MIT license
