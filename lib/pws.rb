@@ -59,6 +59,23 @@ class PWS
   end
   aliases_for :show, :ls, :list, :status
   
+  # Add multiple passwords at a time
+  def multiadd()
+    begin
+      while true
+        key = ask_for_input(false, %[please enter a key to add (or empty to quit)], :yellow)
+        if key.empty?
+          pa %[Exiting...]
+          break
+        end
+
+        password = ask_for_password(%[please enter a password for #{key}], :yellow)
+
+        add(key, password)
+      end
+    end
+  end
+
   # Add a password entry, params: name, password (optional, opens prompt if not given)
   def add(key, password = nil)
     if @data[key]
@@ -273,13 +290,17 @@ class PWS
   
   # Prompts the user for a password
   def ask_for_password(prompt = 'new password', *colors)
+    ask_for_input(true, prompt, *colors)
+  end
+
+  def ask_for_input(hide_output, prompt, *colors)
     print Paint["#{prompt}:".capitalize, *colors] + " "
-    system 'stty -echo' if $stdin.tty?     # no more terminal output
-    password = ($stdin.gets||'').chop      # gets without $stdin would mistakenly read_safe from ARGV
-    system 'stty echo'  if $stdin.tty?     # restore terminal output
-    puts "\e[999D\e[K\e[1A" if $stdin.tty? # re-use prompt line in terminal
+    system 'stty -echo' if $stdin.tty? && hide_output # no more terminal output
+    input = ($stdin.gets||'').chop                    # gets without $stdin would mistakenly read_safe from ARGV
+    system 'stty echo'  if $stdin.tty? && hide_output # restore terminal output
+    puts "\e[999D\e[K\e[1A" if $stdin.tty?            # re-use prompt line in terminal
     
-    password
+    input
   end
   
   # Generate a random password, maybe put in its own class sometime
