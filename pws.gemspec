@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'ripltools'
   s.add_development_dependency 'irbtools'
-  # s.add_development_dependency 'ruby-debug19'
+  s.add_development_dependency 'debugger'
   
   len = s.homepage.size
   s.post_install_message = \

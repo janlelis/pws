@@ -5,6 +5,7 @@ require 'securerandom'
 require 'digest/hmac'
 require 'openssl'
 require 'pbkdf2'
+require_relative '../hacks/fix_pbkdf2_gem'
 
 class PWS
   module Format
