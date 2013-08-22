@@ -46,10 +46,7 @@ Feature: Update
     
   @very-slow-hack
   Scenario: Set a new password for "github", this also sets the timestamp
-    Given A safe exists with master password "my_master_password" and a key "github" with password "old_password" and timestamp "42424242"
-    When I run `pws ls` interactively
-    And  I type "my_master_password"
-    Then the output should not contain the current date
+    Given A safe exists with master password "my_master_password" and a key "github" with password "old_password"
     When I run `pws update github github_password` interactively
     And  I type "my_master_password"
     And  I run `pws show` interactively

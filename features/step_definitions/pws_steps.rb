@@ -11,7 +11,7 @@ def create_safe(master, key_hash = {}, timestamp = nil)
   # only generating global timestamp for every entry
   if timestamp
     pws.instance_variable_get(:@data).each{ |_, entry|
-      entry[:timestamp] = timestamp
+      entry[:timestamp] = timestamp.to_i
     }
     pws.resave
   end
