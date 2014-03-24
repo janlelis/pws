@@ -1,5 +1,6 @@
 == 1.0.5
-* Ruby 2 compat (workaround for pbkdf2 gem)
+* Ruby 2 compat
+* Use "pbkdf2-ruby" instead of "pbkdf2" gem
 * Bump paint/clipboard dependencies
 * Remove zucker dependency
 
