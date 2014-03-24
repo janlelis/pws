@@ -1,5 +1,6 @@
 # encoding: ascii
 require_relative 'pws/version'
+require_relative 'pws/class_support'
 require_relative 'pws/encryptor'
 require_relative 'pws/format'
 
@@ -8,10 +9,11 @@ require 'securerandom'
 require 'abbrev'
 
 require 'clipboard'
-require 'zucker/alias_for'
 require 'paint/pa'
 
 class PWS
+  extend PWS::ClassSupport
+
   class NoAccess < StandardError; end
   class NoLegacyAccess < NoAccess; end
   

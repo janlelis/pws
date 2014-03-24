@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.executables = ['pws']
   s.add_dependency 'clipboard', '~> 1.0.5'
-  s.add_dependency 'zucker',    '>= 12.1'
   s.add_dependency 'paint',     '>= 0.8.7'
   s.add_dependency 'pbkdf2'
   s.add_development_dependency 'rake'
@@ -26,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'guard-cucumber'
   s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency 'ripltools'
   s.add_development_dependency 'irbtools'
   s.add_development_dependency 'byebug'
 

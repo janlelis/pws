@@ -1,6 +1,7 @@
 == 1.0.5
 * Ruby 2 compat (workaround for pbkdf2 gem)
-* Bump paint and zucker dependencies
+* Bump paint/clipboard dependencies
+* Remove zucker dependency
 
 == 1.0.4
 * You can now get your passwords using as short shortcuts as possible powered by stdlib's abbrev library
