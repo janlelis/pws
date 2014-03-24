@@ -2,7 +2,7 @@
 name = 'pws'
 
 require File.dirname(__FILE__) + "/lib/#{name}/version"
- 
+
 Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.2'
   s.name        = name
@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md", "LICENSE"]
   s.license = 'MIT'
   s.executables = ['pws']
-  s.add_dependency 'clipboard', '~> 1.0.1'
+  s.add_dependency 'clipboard', '~> 1.0.5'
   s.add_dependency 'zucker',    '>= 12.1'
-  s.add_dependency 'paint',     '>= 0.8.4'
+  s.add_dependency 'paint',     '>= 0.8.7'
   s.add_dependency 'pbkdf2'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'aruba'
@@ -28,8 +28,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'ripltools'
   s.add_development_dependency 'irbtools'
-  s.add_development_dependency 'debugger'
-  
+  s.add_development_dependency 'byebug'
+
   len = s.homepage.size
   s.post_install_message = \
    ("       ┌── " + "info ".ljust(len-2,'─')                         + "─┐\n" +
