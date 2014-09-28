@@ -8,18 +8,18 @@ class PWS
   # added sometime to support special formats
   # See for example: pws/format/1.0
   module Format
-    IN  = [[0,9], [1,0]]
-    OUT = [[1,0]]
-  
+    IN  = [[0,9], [1,0], [1,1]]
+    OUT = [[1,1]]
+
     class << self
       def read(saved_data, options = {})
         raise ArgumentError, 'No password file given' unless saved_data
         format = normalize_format(options.delete(:format))
-        
+
         if format && !IN.include?(format)
           raise ArgumentError, "Input format <#{format.join('.')}> is not supported"
         end
-        
+
         if format == [0,9]
           encrypted_data = saved_data
         else
@@ -30,29 +30,29 @@ class PWS
           raise(PWS::NoLegacyAccess, 'Password file not valid') unless \
               identifier == '12345678'
           format ||= normalize_format(file_format) # --in option wins againts read file_format
-          
+
           if !IN.include?(format)
             raise PWS::NoAccess, "Input format <#{format.join('.')}> is not supported"
           end
         end
-        
-        
+
+
         self[format].read(encrypted_data, options)
       end
-      
+
       def write(application_data, options)
         format = normalize_format(options.delete(:format) || PWS::VERSION)
-        
+
         raise ArgumentError, "Output format <#{format.join('.')}> is not supported" \
             unless OUT.include?(format)
-            
+
         [
           '12345678',
           *format,
           self[format].write(application_data, options),
         ].pack('a8 C2 x a*')
       end
-      
+
       # Returns the proper file format module for a given format identifier
       # @return Module
       def [](format)
@@ -68,14 +68,14 @@ class PWS
           require_relative "format/#{ format.to_s.gsub(/[^a-z_]/,'') }"
           return const_get(format.capitalize)
         end
-        
+
         raise ArgumentError, error_message
       end
-      
+
       # Converts various version formats into an array of two integers
       # Symbols won't be changed
       def normalize_format(raw_format)
-        case raw_format 
+        case raw_format
         when Symbol
           return raw_format
         when Array
@@ -85,17 +85,17 @@ class PWS
         when nil
           return nil
         end
-        
+
         if !format || !format.is_a?(Array) || !format[0]
           raise ArgumentError, 'Invalid format given'
         else
           format.map!(&:to_i)
           format[1] ||= 0
         end
-        
+
         format
       end
-      
+
     end#self
   end#Format
 end#PWS

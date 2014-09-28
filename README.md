@@ -1,16 +1,26 @@
-pws [![[travis]](https://travis-ci.org/janlelis/pws.png)](https://travis-ci.org/janlelis/pws)
+pws
 ===
-pws is a command-line password safe/manager written in Ruby using [aes-256-cbc](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [pbkdf2](http://en.wikipedia.org/wiki/PBKDF2).
+This is a fork of [*pws* by Jan Lelis](https://github.com/janlelis/pws), a command-line password safe/manager written in Ruby using [aes-256-cbc](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [pbkdf2](http://en.wikipedia.org/wiki/PBKDF2).
 
+This version adds the option to store usernames along with passwords. Read below the instructions to update to this version if you have version 1.0 or 0.9 already installed.
 
 Usage
 ---
-[![Screenshot](http://rbjl.net/pws-example.png)](http://rbjl.net/60-pws-the-ruby-powered-command-line-password-manager)
 
+* Add new passwords with `$ pws add <key>`. You will be prompted for a username and password that will encrypted and stored in your home directory.
+* Retrieve your usernames and passwords with `$ pws get <key>`. The username will be displayed and the password will be copied to your clipboard.
+
+Type `pws help` for complete usage instructions.
 
 Setup
 ---
-You can install *pws* with: `$ gem install pws`
+
+To install *pws 1.1* with usernames support you need to clone this repository and create a local gem:
+
+* `$ gem build pws.gemspec`
+* `$ gem install pws-1.1.gem`
+
+You can install *pws 1.0* with: `$ gem install pws`
 
 Run `$ pws --help` for usage information.
 
@@ -23,9 +33,9 @@ Hints
 You should use a Ruby that was built with bindings to an openssl version >= 1.0 or pws will fall back to a Ruby-only version of the PBKDF2 function, which is much slower. If using openssl 1.0 is not possible for you, you can work around that issue by using the `--iterations` option with a value below 75\_000 (see help). If you have problems using openssl 1.0 with your Ruby, please look for a solution in [this issue](https://github.com/janlelis/pws/issues/7).
 
 
-### Updating from pws 0.9
-The 0.9 password files are not compatible with the 1.0 version of pws, however, you can convert your safe with:
-`$ pws resave --in 0.9 --out 1.0`
+### Updating to pws 1.1 with usernames
+Password files created with versions < 1.1 are not compatible with version 1.1. However, you can easily convery your safes with:
+`$ pws resave --in [0.9|1.0] --out 1.1`
 
 
 ### How to use a .pws file in the current working directory
@@ -48,3 +58,4 @@ Contributors
 J-\_-L
 ---
 © 2010-2013 Jan Lelis, MIT license
+© 2014 Aaron Ciaghi, MIT license (usernames addon)
