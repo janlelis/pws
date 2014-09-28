@@ -14,7 +14,7 @@ module PWS::Runner
       options   = {}
       arguments = []
       argv.unshift(nil) # easier parsing
-      
+
       argv.each_cons(2){ |prev_arg, arg|
         case arg
         when '-'
@@ -37,10 +37,10 @@ module PWS::Runner
           end
         end
       }
-      
+
       [action || :show, arguments, options]
     end
-    
+
     # makes the Ruby safe usable from the cli
     def run(action, arguments, options)
       case action
@@ -48,23 +48,23 @@ module PWS::Runner
         puts "pws #{PWS::VERSION} by " + Paint["J-_-L", :bold] + " <https://github.com/janlelis/pws>"
       when :help, :actions, :commands
         puts(<<HELP)
-  
+
   #{Paint["Usage", :underline]}
-  
+
   #{Paint['pws', :bold]} [-namespace] action [arguments] [--options]
-  
+
   #{Paint["Info", :underline]}
-  
+
   pws allows you to manage passwords in encryted password files (safes). It
   operates on the file specified in the environment variable PWS or on "~/.pws".
   Using a single dash, you can set a namespace that will be appended to the
   filename, e.g. `pws -work show` will operate on "~/.pws-work".
-  
+
   #{Paint["Available Actions", :underline]}
-  
+
   #{Paint['ls', :bold]} / list / show / status ( pattern = nil )
   Lists all available password entries. Optionally takes a regex filter.
-  
+
   #{Paint['get', :bold]} / entry / copy / password / for ( name, seconds = 10 )
   Copies the password for <name> to the clipboard. The second argument specifies,
   how long the password is kept in the clipboard (0 = no deletion).
@@ -72,68 +72,71 @@ module PWS::Runner
   #{Paint['add', :bold]} / set / store / create ( name, password = nil )
   Stores a new password entry. The second argument can be the password, but
   it's recommended to not pass it, but enter it interactively.
-  
+
   #{Paint['gen', :bold]} / generate ( name, seconds = 10, length = 64, char_pool )
   Generates a new password for <name> and then copies it to the clipboard, like
   get (the second argument is the time - it gets passed to get). The third
   argument sets the password length. The fourth argument allows you to pass a
   character pool that is used for generating the passwords.
-  
+
   #{Paint['update', :bold]} / update-add ( name, password = nil )
   Updates an existing password entry.
-  
+
   #{Paint['update-gen', :bold]} / update-generate( name, seconds = 10, length = 64, char_pool )
   Updates an existing password entry using the generate method.
-  
+
   #{Paint['rm', :bold]} / remove / del / delete ( name )
   Removes a password entry.
-  
+
   #{Paint['mv', :bold]} / move / rename ( old_name, new_name )
   Renames a password entry.
-  
+
+  #{Paint['set_user', :bold]} / update_username / add_username / add_user ( name, new_username )
+  Changes (or sets) the username associated with a password entry.
+
   #{Paint['master', :bold]} ( password = nil )
   Changes the master password.
-  
+
   #{Paint['resave', :bold]} / convert
   Just save the safe. Useful for converting the file format.
-  
+
   #{Paint['v', :bold]} / version
   Displays version and website.
-  
+
   #{Paint['help', :bold]} / actions / commands
   Displays this help.
 
   #{Paint["Available Options", :underline]}
-  
+
   #{Paint['--in', :bold]}
   Specifies the password file input format. Neccessary to convert 0.9 safes.
   Supported values: 0.9 1.0
-  
+
   #{Paint['--out', :bold]}
   Specifies the password file output format. Ignored for non-writing actions,
   e.g. get. Defaults to the current version.
   Supported values: 1.0
-  
+
   #{Paint['--filename', :bold]}
   Path to the password safe to use. Overrides usual path and any namespaces.
-  
+
   #{Paint['--cwd', :bold]}
   Use a .pws file in the current directory instead of the one specified in
   ENV['PWS'] or with --filename.
-  
+
   #{Paint['--iterations', :bold]}
   Sets the number of sha iterations used to transform your password into the
   encryption key (pbkdf2). A higher number takes longer to compute, but makes
   it harder for attacker to bruteforce your password.
-  
-  #{Paint['--seconds', :bold]}, #{Paint['--length', :bold]}, #{Paint['--charpool', :bold]} 
+
+  #{Paint['--seconds', :bold]}, #{Paint['--length', :bold]}, #{Paint['--charpool', :bold]}
   Preset options for specific actions.
-  
+
   #{Paint["ENV Variables", :underline]}
-  
+
   You can use environment variables to customize the default settings of pws.
   Except for PWS (info at top), the following variables can be used:
-  
+
   PWS_SECONDS
   PWS_LENGTH
   PWS_CHARPOOL
@@ -168,7 +171,7 @@ HELP
       pa "..canceled", :red
       exit(5)
     end
-    
+
     # exit status codes (not final, yet)
     # 0 Success
     # 2 Successfully run, but operation not successful
