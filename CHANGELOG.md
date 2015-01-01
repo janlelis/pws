@@ -1,3 +1,6 @@
+== 1.0.6
+* Ruby 2.2 compat (remove digest/hmac)
+
 == 1.0.5
 * Ruby 2 compat
 * Use "pbkdf2-ruby" instead of "pbkdf2" gem
