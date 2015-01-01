@@ -4,7 +4,7 @@ name = 'pws'
 require File.dirname(__FILE__) + "/lib/#{name}/version"
 
 Gem::Specification.new do |s|
-  s.required_ruby_version = '>= 1.9.2'
+  s.required_ruby_version = '>= 1.9.3'
   s.name        = name
   s.version     = PWS::VERSION
   s.authors     = ["Jan Lelis"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "pws is a CLI password safe."
   s.description = "pws is a command-line password safe. Please run `pws --help` for usage information."
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} features/**/*]) + %w{Rakefile pws.gemspec}
-  s.extra_rdoc_files = ["README.md", "LICENSE"]
+  s.extra_rdoc_files = ["README.md", "LICENSE.txt"]
   s.license = 'MIT'
   s.executables = ['pws']
   s.add_dependency 'clipboard', '~> 1.0.5'

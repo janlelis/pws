@@ -47,4 +47,4 @@ Contributors
 
 J-\_-L
 ---
-© 2010-2013 Jan Lelis, MIT license
+© 2010-2015 Jan Lelis, MIT license
