@@ -2,7 +2,6 @@
 
 require_relative '../format'
 require 'securerandom'
-require 'digest/hmac'
 require 'openssl'
 require 'pbkdf2'
 
@@ -15,12 +14,12 @@ class PWS
       DEFAULT_ITERATIONS =        75_000
       MAX_ITERATIONS     =    10_000_000
       MAX_ENTRY_LENGTH   = 4_294_967_295 # N
-    
+
       class << self
         def write(application_data, options = {})
           encrypt(marshal(application_data), options)
         end
-        
+
         def encrypt(unencrypted_data, options = {})
           raise ArgumentError, 'No password given' if \
               !options[:password]
@@ -28,27 +27,27 @@ class PWS
           iterations = ( options[:iterations] || DEFAULT_ITERATIONS ).to_i
           raise ArgumentError, 'Invalid iteration count given' if \
               iterations > MAX_ITERATIONS || iterations < 2
-          
+
           salt = SecureRandom.random_bytes(64)
           iv  = Encryptor.random_iv
-          
+
           encryption_key, hmac_key = kdf(
             options[:password],
             salt,
             iterations,
           ).unpack('a256 a256')
-          
+
           sha = hmac(hmac_key, salt, iv, iterations, unencrypted_data)
-          
+
           encrypted_data = Encryptor.encrypt(
             unencrypted_data,
             key: encryption_key,
             iv:  iv,
           )
-          
-          [salt, iv, iterations, sha, encrypted_data].pack(TEMPLATE) 
+
+          [salt, iv, iterations, sha, encrypted_data].pack(TEMPLATE)
         end
-        
+
         def marshal(application_data, options = {})
           number_of_dummy_bytes = 100_000 + SecureRandom.random_number(1_000_000)
           ordered_data = application_data.to_a
@@ -62,32 +61,32 @@ class PWS
             SecureRandom.random_bytes(100_000 + SecureRandom.random_number(1_000_000))
           ].pack('N N a*')
         end
-        
+
         # - - -
-        
+
         def read(encrypted_data, options = {})
           unmarshal(decrypt(encrypted_data, options))
         end
-        
+
         def decrypt(saved_data, options = {})
           raise ArgumentError, 'No password given' if \
               !options[:password]
           raise ArgumentError, 'No data given' if \
               !saved_data || saved_data.empty?
           salt, iv, iterations, sha, encrypted_data = saved_data.unpack(TEMPLATE)
-          
+
           raise NoAccess, 'Password file invalid' if \
               salt.size != 64             ||
               iterations > MAX_ITERATIONS ||
               iv.size != 16               ||
               sha.size != 64
-              
+
           encryption_key, hmac_key = kdf(
             options[:password],
             salt,
             iterations,
           ).unpack('a256 a256')
-          
+
           begin
             unencrypted_data = Encryptor.decrypt(
               encrypted_data,
@@ -97,13 +96,13 @@ class PWS
           rescue OpenSSL::Cipher::CipherError
             raise NoAccess, 'Could not decrypt'
           end
-          
+
           raise NoAccess, 'Password file invalid' unless \
               sha == hmac(hmac_key, salt, iv, iterations, unencrypted_data)
-              
+
           unencrypted_data
         end
-        
+
         def unmarshal(saved_data, options = {})
           number_of_dummy_bytes, data_size, raw_data = saved_data.unpack('N N a*')
           i = number_of_dummy_bytes
@@ -121,15 +120,15 @@ class PWS
             )
           ]
         end
-        
+
         # support
-        
+
         def hmac(key, *strings)
-          Digest::HMAC.new(key, Digest::SHA512).update(
+          OpenSSL::HMAC.new(key, Digest::OpenSSL::SHA512.new).update(
             strings.map(&:to_s).join
           ).digest
         end
-        
+
         def kdf_openssl(password, salt, iterations)
           OpenSSL::PKCS5::pbkdf2_hmac(
             password,
@@ -139,7 +138,7 @@ class PWS
             OpenSSL::Digest::SHA512.new,
           )
         end
-        
+
         def kdf_ruby(password, salt, iterations)
           PBKDF2.new(
             password: password,
@@ -149,7 +148,7 @@ class PWS
             hash_function: OpenSSL::Digest::SHA512,
           ).bin_string
         end
-        
+
         # see gh#7
         begin
           OpenSSL::PKCS5::pbkdf2_hmac("","",2,512,OpenSSL::Digest::SHA512.new)
@@ -159,9 +158,9 @@ class PWS
         else
           alias kdf kdf_openssl
         end
-        
+
         private
-        
+
         def array_to_data_string(array)
           array.map{ |e|
             e = e.to_s
@@ -170,12 +169,12 @@ class PWS
             [s, e].pack('N a*')
           }.join
         end
-        
+
         def get_next_data_string(string, pos)
           res_length = string[pos..pos+4].unpack('N')[0]
           new_pos = pos + 4 + res_length
           res = string[pos+4...new_pos].unpack('a*')[0]
-          
+
           [res, new_pos]
         end
       end#self
