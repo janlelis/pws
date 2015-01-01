@@ -124,7 +124,7 @@ class PWS
         # support
 
         def hmac(key, *strings)
-          OpenSSL::HMAC.new(key, Digest::OpenSSL::SHA512.new).update(
+          OpenSSL::HMAC.new(key, OpenSSL::Digest::SHA512.new).update(
             strings.map(&:to_s).join
           ).digest
         end
