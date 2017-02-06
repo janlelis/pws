@@ -41,7 +41,7 @@ class PWS
 
           encrypted_data = Encryptor.encrypt(
             unencrypted_data,
-            key: encryption_key,
+            key: encryption_key[0...32],
             iv:  iv,
           )
 
@@ -90,7 +90,7 @@ class PWS
           begin
             unencrypted_data = Encryptor.decrypt(
               encrypted_data,
-              key: encryption_key,
+              key: encryption_key[0...32],
               iv:  iv,
             )
           rescue OpenSSL::Cipher::CipherError

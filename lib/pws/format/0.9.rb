@@ -21,7 +21,7 @@ class PWS
           iv, encrypted_data = saved_data.unpack('a16 a*')
           PWS::Encryptor.decrypt(
             encrypted_data,
-            key: sha(options[:password]),
+            key: sha(options[:password])[0...32],
             iv:   iv,
           )
         end
