@@ -229,7 +229,7 @@ class PWS
     if File.file?(@filename)
       print %[Access password safe at #@filename | ]
       @password = password || ask_for_password(%[master password])
-      encrypted_data = File.read(@filename)
+      encrypted_data = File.read(@filename, mode: "rb")
       
       @data = Format.read(
         encrypted_data,
@@ -253,7 +253,7 @@ class PWS
       format: @options[:out],
       iterations: @options[:iterations],
     )
-    File.open(@filename, 'w'){ |f| f.write(encrypted_data) }
+    File.open(@filename, 'wb'){ |f| f.write(encrypted_data) }
     update_abbrevs!
   end
   

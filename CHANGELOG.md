@@ -1,5 +1,6 @@
 == 1.0.7
 * Ruby 2.4 compat (explicitely only pass 32 bytes of the encryption key)
+* Explicitely write and read password file as binary to avoid Ruby encoding exceptions under some circumstances
 
 == 1.0.6
 * Ruby 2.2 compat (remove digest/hmac)
