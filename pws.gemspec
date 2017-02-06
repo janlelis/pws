@@ -19,14 +19,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'clipboard', '~> 1.0.5'
   s.add_dependency 'paint',     '>= 0.8.7'
   s.add_dependency 'pbkdf2-ruby'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'aruba'
-  s.add_development_dependency 'cucumber'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'guard-cucumber'
-  s.add_development_dependency 'guard-rspec'
-  # s.add_development_dependency 'irbtools'
-  # s.add_development_dependency 'byebug'
+  s.add_development_dependency 'rake', '< 13'
+  s.add_development_dependency 'aruba', '= 0.5.4'
+  s.add_development_dependency 'cucumber', '~> 2.4.0'
+  s.add_development_dependency 'rspec', '~> 2.99'
 
   len = s.homepage.size
   s.post_install_message = \
