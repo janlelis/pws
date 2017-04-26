@@ -5,7 +5,7 @@ pws is a command-line password safe/manager written in Ruby using [aes-256-cbc](
 
 Usage
 ---
-[![Screenshot](http://rbjl.net/pws-example.png)](http://rbjl.net/60-pws-the-ruby-powered-command-line-password-manager)
+[![Screenshot](https://ruby.janlelis.de/pws-example.png)](https://ruby.janlelis.de/60-pws-the-ruby-powered-command-line-password-manager)
 
 
 Setup
@@ -33,7 +33,7 @@ Besides using the `--filename path/to/safe` option, you can shortly call `pws --
 
 
 ### Reading the source
-Trust the code by reading the source! It's originally based on [this tutorial](http://rbjl.net/41-tutorial-build-your-own-password-safe-with-ruby). You might want to start reading in the [0.9.2 tag](https://github.com/janlelis/pws/tree/0.9.2), because it's got less features and therefore is less code.
+Trust the code by reading the source! It's originally based on [this tutorial](https://ruby.janlelis.de/41-tutorial-build-your-own-password-safe-with-ruby). You might want to start reading in the [0.9.2 tag](https://github.com/janlelis/pws/tree/0.9.2), because it's got less features and therefore is less code.
 
 
 Contributors
