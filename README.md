@@ -36,6 +36,19 @@ Besides using the `--filename path/to/safe` option, you can shortly call `pws --
 Trust the code by reading the source! It's originally based on [this tutorial](https://ruby.janlelis.de/41-tutorial-build-your-own-password-safe-with-ruby). You might want to start reading in the [0.9.2 tag](https://github.com/janlelis/pws/tree/0.9.2), because it's got less features and therefore is less code.
 
 
+Projects built on top of PWS
+---
+* [pws-otp](https://github.com/janlelis/pws-otp) Experimental OTP support for 2FA
+* [pwsqr](https://github.com/smileart/pwsqr) Simple QR interface to pws gem. Helps to use your passwords on a smartphone.
+* [aws-pws](https://github.com/fancyremarker/aws-pws) A password-protected CredentialProvider for AWS
+* [omnivault](https://github.com/aptible/omnivault) Multi-platform keychain functionality
+
+
+Blog articles
+---
+* [Packaging ruby programs in NixOS](http://blog.arkency.com/2016/04/packaging-ruby-programs-in-nixos/) using PWS as example
+
+
 Contributors
 ---
 * [namelessjon](https://github.com/namelessjon/)
