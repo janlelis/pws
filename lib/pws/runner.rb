@@ -126,7 +126,7 @@ module PWS::Runner
   encryption key (pbkdf2). A higher number takes longer to compute, but makes
   it harder for attacker to bruteforce your password.
   
-  #{Paint['--seconds', :bold]}, #{Paint['--length', :bold]}, #{Paint['--charpool', :bold]} 
+  #{Paint['--seconds', :bold]}, #{Paint['--length', :bold]}, #{Paint['--charpool', :bold]}, #{Paint['--exclude', :bold]}
   Preset options for specific actions.
   
   #{Paint["ENV Variables", :underline]}
