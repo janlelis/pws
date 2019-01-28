@@ -1,4 +1,4 @@
-== Next
+== 1.0.8
 * New command to print password to screen, patch by @terabyte
 * New option to exclude specific characters when generating new passwords, patch by @alex0112
 * Update (and loosen up) clipboard dependency
