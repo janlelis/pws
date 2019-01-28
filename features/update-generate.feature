@@ -1,4 +1,4 @@
-Feature: Update
+Feature: UpdateGenerate
   In order to keep my privacy
   As a user
   I want to update a password entry and generate the new password

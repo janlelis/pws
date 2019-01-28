@@ -61,32 +61,6 @@ class PWS
   end
   aliases_for :show, :ls, :list, :status
   
-  # print a password entry to the screen
-  def print_screen(key, seconds = @options[:seconds])
-    if real_key = @abbrevs[key]
-      password = @data[real_key][:password]
-      if seconds && seconds.to_i > 0
-        #pa %[The password for #{real_key} will be displayed for #{seconds.to_i} seconds: #{password}], :green
-        print Paint[%[The password for #{real_key} will be displayed for #{seconds.to_i} seconds: #{password}], :green]
-        begin
-          sleep seconds.to_i
-        rescue Interrupt
-          puts "\e[999D\e[K\e[1A" if $stdin.tty? # clear the pw from the screen
-          raise
-        end
-        puts "\e[999D\e[K\e[1A" if $stdin.tty? # clear the pw from the screen
-        return true
-      else
-        pa %[The password for #{real_key} is: #{password}], :green
-        return true
-      end
-    else
-      pa %[No password found for #{key}!], :red
-      return false
-    end
-  end
-  aliases_for :print_screen, :ps
-
   # Add a password entry, params: name, password (optional, opens prompt if not given)
   def add(key, password = nil)
     if @data[key]
@@ -153,6 +127,32 @@ class PWS
     end
   end
   aliases_for :get, :entry, :copy, :password, :for, :[]
+
+  # Print a password entry to the screen
+  def print_screen(key, seconds = @options[:seconds])
+    if real_key = @abbrevs[key]
+      password = @data[real_key][:password]
+      if seconds && seconds.to_i > 0
+        print Paint[%[The password for #{real_key} will be displayed for #{seconds.to_i} second#{?s if seconds.to_i > 1}:\n#{password}], :green]
+        begin
+          sleep seconds.to_i
+        rescue Interrupt
+          puts "\e[999D\e[K\e[1A"*2 if $stdin.tty? # clear the pw from the screen
+          raise
+        end
+        puts "\e[999D\e[K\e[1A"*2 if $stdin.tty? # clear the pw from the screen
+        return true
+      else
+        pa %[The password for #{real_key} is:\n#{password}], :green
+        return true
+      end
+    else
+      pa %[No password found for #{key}!], :red
+      return false
+    end
+  end
+  alias :'print-screen' :print_screen
+  alias :ps :print_screen
   
   # Adds a password entry with a freshly generated random password
   def generate(
