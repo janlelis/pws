@@ -3,7 +3,7 @@ Feature: Remove
   As a user
   I want to remove passwords from my password safe
   
-  @slow-hack
+  
   Scenario: Remove password entry "github"
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws remove github` interactively

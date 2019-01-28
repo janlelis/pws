@@ -3,7 +3,7 @@ Feature: Add
   As a user
   I want to add new passwords to my password safe
 
-  @slow-hack
+  
   Scenario: Add a new password for "github"
     Given A safe exists with master password "my_master_password"
     When I run `pws add github` interactively
@@ -13,7 +13,7 @@ Feature: Add
     And  the output should contain "Please enter a password for github:"
     And  the output should contain "The password for github has been added"
 
-  @slow-hack
+  
   Scenario: Add a new password for "github", already passing it as command line paramenter (not recommended)
     Given A safe exists with master password "my_master_password"
     When I run `pws add github github_password` interactively
@@ -44,7 +44,7 @@ Feature: Add
     Then the output should contain "Master password:"
     And  the output should contain "NO ACCESS"
 
-  @very-slow-hack
+  
   Scenario: Set a new password for "github", this also sets the timestamp
     Given A safe exists with master password "my_master_password" and a key "some" with password "entry"
     When I run `pws add github github_password` interactively

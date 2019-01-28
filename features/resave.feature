@@ -3,7 +3,7 @@ Feature: Resave
   As a user
   I want resave the save
   
-  @slow-hack
+  
   Scenario: Usual resave
     Given A safe exists with master password "my_master_password" and keys
       | some      | 123 |
@@ -18,7 +18,7 @@ Feature: Resave
     And  the output should contain "password"
     And  the output should contain "entries"
     
-  @slow-hack
+  
   Scenario: Useful for converting when used together with --in and --out options
     Given A "0.9" safe exists with master password "password" and a key "github" with password "123456"
     When I run `pws show` interactively

@@ -33,17 +33,3 @@ Around do |_, block|
   
   FileUtils.rm ENV["PWS"] if File.exist? ENV["PWS"]
 end
-
-# Hacks
-
-Before('@slow-hack') do
-  @aruba_io_wait_seconds = 3
-end
-
-Before('@very-slow-hack') do
-  @aruba_io_wait_seconds = 7
-end
-
-Before('@wait-11s') do
-  @aruba_timeout_seconds = 15
-end

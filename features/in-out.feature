@@ -32,7 +32,7 @@ Feature: --in and --out options
     Then the output should contain "Master password:"
     Then the output should contain "NO ACCESS"
   
-  @slow-hack
+  
   Scenario: Succesfully converts from 0.9 to 1.0 with --in 0.9 and out --1.0 options
     Given A "0.9" safe exists with master password "password" and a key "github" with password "123456"
     When I run `pws resave --in 0.9 --out 1.0` interactively

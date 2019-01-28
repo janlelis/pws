@@ -3,7 +3,7 @@ Feature: Master
   As a user
   I want to change the master password
 
-  @slow-hack
+  
   Scenario: Change the master password and check that it has changed
     Given A safe exists with master password "my_master_password"
     When I run `pws master` interactively
@@ -37,7 +37,7 @@ Feature: Master
     Then the output should contain "Master password:"
     And  the output should contain "The master password has been changed"
     
-  @slow-hack
+  
   Scenario: I can have an empty master password (not recommended)
     Given A safe exists with master password "my_master_password"
     When I run `pws master` interactively

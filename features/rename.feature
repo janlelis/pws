@@ -3,7 +3,7 @@ Feature: Rename
   As a user
   I want to rename passwords in my password safe
 
-  @very-slow-hack
+  
   Scenario: Rename the password entry "github" to "gh"
     Given A safe exists with master password "my_master_password" and a key "github" with password "github_password"
     When I run `pws rename github gh` interactively
