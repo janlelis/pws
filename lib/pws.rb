@@ -133,9 +133,10 @@ class PWS
         key,
         seconds   = @options[:seconds],
         length    = @options[:length],
-        charpool  = @options[:charpool]
+        charpool  = @options[:charpool],
+        excluded  = @options[:exclude]
     )
-    get(key, seconds) if add(key, generator(length, charpool))
+    get(key, seconds) if add(key, generator(length, charpool, excluded))
   end
   alias_for :generate, :gen
   
@@ -144,9 +145,10 @@ class PWS
         key,
         seconds   = @options[:seconds],
         length    = @options[:length],
-        charpool  = @options[:charpool]
+        charpool  = @options[:charpool],
+        excluded  = @options[:exclude]
     )
-    get(key, seconds) if update(key, generator(length, charpool))
+    get(key, seconds) if update(key, generator(length, charpool, excluded))
   end
   alias :'update-generate' :update_generate
   alias :'update_gen'      :update_generate
@@ -285,7 +287,8 @@ class PWS
   end
   
   # Generate a random password, maybe put in its own class sometime
-  def generator(length, charpool)
+  def generator(length, charpool, exclude)
+    charpool.tr!(exclude, '') if exclude
     charpool_size = charpool.size
     (1..length.to_i).map{
       charpool[SecureRandom.random_number(charpool_size)]
