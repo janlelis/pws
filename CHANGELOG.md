@@ -1,5 +1,6 @@
 == Next
 * New option to exclude specific characters when generating new passwords, patch by @alex0112
+* Update (and loosen up) clipboard dependency
 
 == 1.0.7
 * Ruby 2.4 compat (explicitely only pass 32 bytes of the encryption key)

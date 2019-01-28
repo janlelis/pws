@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md", "MIT-LICENSE.txt", "CHANGELOG.md"]
   s.license = 'MIT'
   s.executables = ['pws']
-  s.add_dependency 'clipboard', '~> 1.1.1'
+  s.add_dependency 'clipboard', '~> 1.3'
   s.add_dependency 'paint',     '>= 0.8.7'
   s.add_dependency 'pbkdf2-ruby'
   s.add_development_dependency 'rake', '< 13'
