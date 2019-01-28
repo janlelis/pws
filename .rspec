@@ -1,2 +1,3 @@
+--require ./spec/spec_helper
 --colour
 --format documentation
