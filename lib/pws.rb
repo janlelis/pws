@@ -288,7 +288,7 @@ class PWS
   
   # Generate a random password, maybe put in its own class sometime
   def generator(length, charpool, exclude)
-    charpool.tr!(exclude, '') if exclude
+    charpool = charpool.tr(exclude, '') if exclude
     charpool_size = charpool.size
     (1..length.to_i).map{
       charpool[SecureRandom.random_number(charpool_size)]
