@@ -68,6 +68,14 @@ module PWS::Runner
   #{Paint['get', :bold]} / entry / copy / password / for ( name, seconds = 10 )
   Copies the password for <name> to the clipboard. The second argument specifies,
   how long the password is kept in the clipboard (0 = no deletion).
+  Please keep in mind that other programs can access (and log) the contents
+  of your clipboard.
+
+  #{Paint['ps', :bold]} / print-screen ( name, seconds = 10 )
+  Displays the password on stdout. The second argument specifies,
+  how long the password is shown (0 = no deletion).
+  Please keep in mind that the password will appear in your shell's logfile,
+  for example, in "~/.bash_history"
 
   #{Paint['add', :bold]} / set / store / create ( name, password = nil )
   Stores a new password entry. The second argument can be the password, but
