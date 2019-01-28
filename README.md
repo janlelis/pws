@@ -1,6 +1,6 @@
-pws [![[travis]](https://travis-ci.org/janlelis/pws.png)](https://travis-ci.org/janlelis/pws)
+pws | A Clipboard based CLI Password Safe [<img src="https://badge.fury.io/rb/pws.svg" />](https://badge.fury.io/rb/pws) [![[travis]](https://travis-ci.org/janlelis/pws.png)](https://travis-ci.org/janlelis/pws)
 ===
-pws is a command-line password safe/manager written in Ruby using [aes-256-cbc](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [pbkdf2](http://en.wikipedia.org/wiki/PBKDF2).
+pws is a command-line password safe/manager written in Ruby using [AES-256-CBC](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [PBKDF2](http://en.wikipedia.org/wiki/PBKDF2).
 
 
 Usage
@@ -10,14 +10,22 @@ Usage
 
 Setup
 ---
-You can install *pws* with: `$ gem install pws`
+Make sure your computer has Ruby installed.
+
+You can then install *pws* with: `$ gem install pws`
 
 Run `$ pws --help` for usage information.
 
-On Linux, please make sure you've got `xclip` or `xsel` installed (for the clipboard).
+If you use pws on Linux, you will need to have `xsel` or `xclip` installed (for the clipboard to work).
 
-Hints
+Tips &amp; Troubleshooting
 ---
+
+### How to use a .pws file in the current working directory
+Besides using the `--filename path/to/safe` option, you can shortly call `pws --cwd` for using a `.pws` file in the current directory.
+
+Check the `.pws` into version control and you have a great way to share a project's passwords within your team.
+
 
 ### OpenSSL 1.0
 You should use a Ruby that was built with bindings to an openssl version >= 1.0 or pws will fall back to a Ruby-only version of the PBKDF2 function, which is much slower. If using openssl 1.0 is not possible for you, you can work around that issue by using the `--iterations` option with a value below 75\_000 (see help). If you have problems using openssl 1.0 with your Ruby, please look for a solution in [this issue](https://github.com/janlelis/pws/issues/7).
@@ -26,10 +34,6 @@ You should use a Ruby that was built with bindings to an openssl version >= 1.0 
 ### Updating from pws 0.9
 The 0.9 password files are not compatible with the 1.0 version of pws, however, you can convert your safe with:
 `$ pws resave --in 0.9 --out 1.0`
-
-
-### How to use a .pws file in the current working directory
-Besides using the `--filename path/to/safe` option, you can shortly call `pws --cwd` for using a `.pws` file in the current directory.
 
 
 ### Reading the source
@@ -44,7 +48,7 @@ Projects built on top of PWS
 * [omnivault](https://github.com/aptible/omnivault) Multi-platform keychain functionality
 
 
-Blog articles
+Blog Articles
 ---
 * [Packaging ruby programs in NixOS](http://blog.arkency.com/2016/04/packaging-ruby-programs-in-nixos/) using PWS as example
 
@@ -56,6 +60,8 @@ Contributors
 * [dquimper](https://github.com/dquimper/)
 * [grapz](https://github.com/grapz/)
 * [thecatwasnot](https://github.com/thecatwasnot/) (cucumber specs loosely based on [these](https://github.com/thecatwasnot/passwordsafe/blob/master/features/))
+* [terabyte](https://github.com/terabyte)
+* [alex0112](https://github.com/alex0112)
 
 
 J-\_-L
