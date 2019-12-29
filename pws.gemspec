@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name        = name
   s.version     = PWS::VERSION
   s.authors     = ["Jan Lelis"]
-  s.email       = "mail@janlelis.de"
+  s.email       = ["hi@ruby.consulting"]
   s.homepage    = 'https://github.com/janlelis/pws'
   s.summary     = "pws is a CLI password safe."
   s.description = "pws is a command-line password safe. Please run `pws --help` for usage information."
