@@ -1,4 +1,4 @@
-A Clipboard based CLI Password Safe [<img src="https://badge.fury.io/rb/pws.svg" />](https://badge.fury.io/rb/pws) [![[travis]](https://travis-ci.org/janlelis/pws.png)](https://travis-ci.org/janlelis/pws)
+A Clipboard based CLI Password Safe [<img src="https://badge.fury.io/rb/pws.svg" />](https://badge.fury.io/rb/pws) [![[ci]](https://github.com/janlelis/pws/workflows/Test/badge.svg)](https://github.com/janlelis/pws/actions?query=workflow%3ATest)
 ===
 **pws** is a command-line password safe/manager written in Ruby using [AES-256-CBC](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [PBKDF2](http://en.wikipedia.org/wiki/PBKDF2).
 
