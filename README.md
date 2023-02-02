@@ -2,6 +2,11 @@ A Clipboard based CLI Password Safe [<img src="https://badge.fury.io/rb/pws.svg"
 ===
 **pws** is a command-line password safe/manager written in Ruby using [AES-256-CBC](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [PBKDF2](http://en.wikipedia.org/wiki/PBKDF2).
 
+2023 Notice!
+---
+
+Although the gem works well and as described, its cryptographic foundations have not been updated since 10 years ago and might not reflect current best practices.
+
 
 Usage
 ---
